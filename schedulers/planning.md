@@ -1,6 +1,14 @@
 # To Do
 
+## 8-8-24 Switch to Inspiron Dev
+
+New development laptop just droppped
+- Camera ready paper is submitted -> Conference to-dos will be generated
+- Survey all files 
+- Write Issues
+
 ## 7-25-24 Switch to Surface
+
 Thinkpad is in the repair shop. 
 **Only do vtc 2024 code, inform Song that the previous simulation and testbed code hasn't been documented or organized yet. **
 Ask Song about making a GitHub organization (for the Pervasive Computing Lab )
