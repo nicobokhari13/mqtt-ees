@@ -4,7 +4,7 @@
 
 New development laptop just droppped
 - Camera ready paper is submitted -> Conference to-dos will be generated
-- Survey all files 
+- Clean up files in each directory
 - Write Issues
 
 ## 7-25-24 Switch to Surface
