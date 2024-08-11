@@ -1,23 +1,28 @@
-from constants import ConfigUtils
 from datetime import datetime
-from container.publisher import Publisher_Container
-from container.topic import Topic_Container
-from container.subscriber import Subscriber_Container
 import random
 import sys
 import csv
+# Config Module
+from constants import ConfigUtils
+# Variable Containers 
+from container.publisher import Publisher_Container
+from container.topic import Topic_Container
+from container.subscriber import Subscriber_Container
+
+# Schedulers
 from schedulers.mqtt_cc import MQTTCC
-#from round_robin import RR
-# from max_batt import MB
-# from min_task import MT
 from schedulers.random_algo import Random
 from schedulers.mqtt_algo import Standard
 
+
+
 #------------------------------------------#
 
-
+# User Input
 config_file = sys.argv[1]
 last_msg = sys.argv[2]
+
+
 # EXPERIMENT SET UP
 configuration = ConfigUtils()
 configuration.setConstants(configFilePath=config_file)
@@ -52,9 +57,9 @@ topic_c.setObservationPeriod(period=configuration.OBSERVATION_PERIOD_MILISEC)
 system_capability = {}
 
 #------------------------------------------#
+# Precondition: 
+# Postcondition:
 
-
-# Precondition: all the topic strings are created
 def createSystemCapability():
     capability = {topic: [-1, []] for topic in topic_c._topic_dict.keys()}
     for topic in topic_c._topic_dict.keys(): # for every topic
@@ -64,6 +69,8 @@ def createSystemCapability():
     return capability
 
 #------------------------------------------#
+# Precondition: 
+# Postcondition:
 
 def setup_exp_vary_pub():
     exp_num_pub = random.randint(3, configuration._max_pubs)
@@ -72,6 +79,8 @@ def setup_exp_vary_pub():
     pub_c.setupDevices(num_pubs=exp_num_pub)
 
 #------------------------------------------#
+# Precondition: 
+# Postcondition:
 
 def setup_exp_vary_sub():
     exp_num_subs = random.randint(3, configuration._max_subs)
@@ -80,6 +89,8 @@ def setup_exp_vary_sub():
     pub_c.setupDevices(num_pubs=0)
 
 #------------------------------------------#
+# Precondition: 
+# Postcondition:
 
 def setup_exp_vary_topic():
     exp_num_topics = random.randint(3, configuration._max_topics)
@@ -88,6 +99,8 @@ def setup_exp_vary_topic():
     pub_c.setupDevices(num_pubs=0)
 
 #------------------------------------------#
+# Precondition: 
+# Postcondition:
 
 def setup_default():
     topic_c.setupTopicStrings(numTopics=0)
@@ -95,6 +108,8 @@ def setup_default():
     pub_c.setupDevices(num_pubs=0)
 
 #------------------------------------------#
+# Precondition: 
+# Postcondition:
 
 # performed once before the rounds start
 def experiment_setup():
@@ -121,6 +136,8 @@ def experiment_setup():
     #print(system_capability)
 
 #------------------------------------------#
+# Precondition: 
+# Postcondition:
 
 # CSV Format for all files
     # algo_name, num_round, num_topic, num_pubs, num_subs, total_energy_consumption
@@ -143,6 +160,8 @@ def saveResults(algo_name:str, num_round, num_topic, num_pubs, num_subs, total_e
         writer.writerow(data)
 
 #------------------------------------------#
+# Precondition: 
+# Postcondition:
 
 def getConsumption():
     totalConsumption = 0
@@ -151,6 +170,8 @@ def getConsumption():
     return totalConsumption
 
 #------------------------------------------#
+# Precondition: 
+# Postcondition:
 
 def main():
     # create algo objects
