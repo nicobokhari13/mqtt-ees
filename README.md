@@ -1,12 +1,11 @@
 # MQTT-EES
 
-# TODO
+# TODO: all mqtt-ees TODOs 
 
 1. Read `config-*.ini` in `config` folder
    1. Reorganize [this](/mqtt-ees/config/config-ees-lifespan.ini) config to the template
    2. Determine template config
-   3. Create `VTC-F24-Experiment Folder
-   4. Create ConfigFileMonitor
+   3. Create ConfigFileMonitor
 2. Go through config files, determine standard indication for describing variables
 3. Check for errors that may lead to `None` being evaluated for some crucial variable condition
 4. Refactor main(copy of `main.py`) and export sensing capabilities, topics, subscribers, devices. etc to readable files? 
