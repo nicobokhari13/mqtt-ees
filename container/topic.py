@@ -61,7 +61,6 @@ class Topic_Container:
         # this object will be the same across all algorithms, need deepcopy for each
         # only created once per round
     def setupSenseTimestamps(self):
-        # TODO: use list(range(0, observation_period + 1, freq))
         self._all_sense_timestamps = {}
         timestamp_list = []
         for topic in self._topic_dict.keys():

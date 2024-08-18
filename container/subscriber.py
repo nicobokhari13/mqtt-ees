@@ -1,5 +1,5 @@
 import random
-from sim.container.topic import Topic_Container
+from container.topic import Topic_Container
 
 topic_c = Topic_Container()
 
