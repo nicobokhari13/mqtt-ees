@@ -26,3 +26,21 @@
 `experiment_setup` function
 - difference in setup between varying pub,sub,topic,and "default"
 - create sense timestamps 
+
+## Within main function
+
+- create algorithm instances
+- for each round in configuration -> perform `experiement_setup`
+  - for each algorithm 
+    - provide copy of system capability + topic timestamps
+    - algorithms return a `timeEnd` variable 
+    - with the time the experiment concludes in the round 
+    - or `None` if it completes the observation period
+  - total all the consumptions from each device
+  - save results in specific csv
+  - reset devices
+    - device capability reset (why does each device have a repeated dictionary of topic:qos?)
+    - consumption = 0
+    - battery = 100
+    - executions per minute decresed
+  - reset the topic container
