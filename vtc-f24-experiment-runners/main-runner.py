@@ -43,9 +43,9 @@ sub_c.setDefaultNumSubs(configuration._default_num_subs)
 topic_c.setDefaultNumTopics(configuration._default_num_topics)
 
 # other constants
-sub_c.setLatencyMinMax(min=configuration._LAT_QOS_MIN, max=configuration._LAT_QOS_MAX)
+sub_c.setFrequencyMinMax(min=configuration.MIN_FREQ_MS, max=configuration.MAX_FREQ_MS)
 pub_c.setEnergies(sense_energy=configuration._sense_energy, comm_energy=configuration._comm_energy)
-pub_c.setThreshold(threshold=configuration._THRESHOLD_WINDOW)
+pub_c.setTailWindow(tailwindow=configuration._tail_window_ms)
 pub_c.setObservationPeriod(period=configuration.OBSERVATION_PERIOD_MILISEC)
 topic_c.setObservationPeriod(period=configuration.OBSERVATION_PERIOD_MILISEC)
 # create capability matrix
@@ -61,7 +61,7 @@ system_capability = {}
 def createSystemCapability():
     capability = {topic: [-1, []] for topic in topic_c._topic_dict.keys()}
     for topic in topic_c._topic_dict.keys(): # for every topic
-        for device in pub_c._devices._units.values(): # find the device
+        for device in pub_c._publishers._devices.values(): # find the device
             if device.capableOfPublishing(topic):
                 capability[topic][1].append(device._device_mac)
     return capability
@@ -72,7 +72,7 @@ def createSystemCapability():
 def setup_exp_vary_pub():
     exp_num_pub = random.randint(3, configuration._max_pubs)
     topic_c.setupTopicStrings(numTopics=0)
-    sub_c.setUpLatQoS(num_subs=0)
+    sub_c.setUpSubscriberFrequencies(num_subs=0)
     pub_c.setupDevices(num_pubs=exp_num_pub)
 
 #------------------------------------------#
@@ -81,7 +81,7 @@ def setup_exp_vary_pub():
 def setup_exp_vary_sub():
     exp_num_subs = random.randint(3, configuration._max_subs)
     topic_c.setupTopicStrings(numTopics=0)
-    sub_c.setUpLatQoS(num_subs=exp_num_subs)
+    sub_c.setUpSubscriberFrequencies(num_subs=exp_num_subs)
     pub_c.setupDevices(num_pubs=0)
 
 #------------------------------------------#
@@ -90,7 +90,7 @@ def setup_exp_vary_sub():
 def setup_exp_vary_topic():
     exp_num_topics = random.randint(3, configuration._max_topics)
     topic_c.setupTopicStrings(numTopics=exp_num_topics)
-    sub_c.setUpLatQoS(num_subs=0)
+    sub_c.setUpSubscriberFrequencies(num_subs=0)
     pub_c.setupDevices(num_pubs=0)
 
 
@@ -98,7 +98,7 @@ def setup_exp_vary_topic():
 
 def setup_default():
     topic_c.setupTopicStrings(numTopics=0)
-    sub_c.setUpLatQoS(num_subs=0)
+    sub_c.setUpSubscriberFrequencies(num_subs=0)
     pub_c.setupDevices(num_pubs=0)
 
 #------------------------------------------#
@@ -145,8 +145,8 @@ def saveResults(algo_name:str, num_round, num_topic, num_pubs, num_subs, total_e
         #file_path = file_paths["threshold_path"] + filename + "thresh_" + str(configuration._THRESHOLD_WINDOW) 
     file_path = file_path + ".csv"
     data = [algo_name, time_end, num_round, num_topic, num_pubs, num_subs, total_energy_consumption]
-    for device in pub_c._devices._units.keys():
-        data.append(pub_c._devices._units[device]._consumption)
+    for device in pub_c._publishers._devices.keys():
+        data.append(pub_c._publishers._devices[device]._consumption)
     with open(file_path, 'a', newline='') as file:
         writer = csv.writer(file)
         writer.writerow(data)
@@ -156,8 +156,8 @@ def saveResults(algo_name:str, num_round, num_topic, num_pubs, num_subs, total_e
 
 def getConsumption():
     totalConsumption = 0
-    for deviceMac in pub_c._devices._units.keys():
-        totalConsumption += pub_c._devices._units[deviceMac]._consumption
+    for deviceMac in pub_c._publishers._devices.keys():
+        totalConsumption += pub_c._publishers._devices[deviceMac]._consumption
     return totalConsumption
 
 #------------------------------------------#
@@ -196,22 +196,22 @@ def main():
         saveResults(algo_name=rand._algo_name, time_end=timeEnd, num_round=round, num_topic=topic_c._total_topics, num_pubs=pub_c._total_devices, num_subs=sub_c._total_subs, total_energy_consumption=totalConsumption)
         
         # # # reset experiment for next algorithm
-        pub_c._devices.resetUnits()
-        pub_c._devices.clearAllDeviceEnergyConsumption()
+        pub_c._publishers.resetUnits()
+        pub_c._publishers.clearAllDeviceEnergyConsumption()
 # ==================== MQTT ==================== 
         mqtt.mqtt_algo()
         totalConsumption = getConsumption()
         saveResults(algo_name=mqtt._algo_name, num_round=round, num_topic=topic_c._total_topics, num_pubs=pub_c._total_devices, num_subs=sub_c._total_subs, total_energy_consumption=totalConsumption)
-        pub_c._devices.resetUnits()
-        pub_c._devices.clearAllDeviceEnergyConsumption()
+        pub_c._publishers.resetUnits()
+        pub_c._publishers.clearAllDeviceEnergyConsumption()
 # ==================== MQTT-EES ====================
         timeEnd = cc.mqttcc_algo()
         if timeEnd is None:
             timeEnd = "None"
         totalConsumption = getConsumption()
         saveResults(algo_name=cc._algo_name, time_end=timeEnd, num_round=round, num_topic=topic_c._total_topics, num_pubs=pub_c._total_devices, num_subs=sub_c._total_subs, total_energy_consumption=totalConsumption)
-        pub_c._devices.resetUnits()
-        pub_c._devices.clearAllDeviceEnergyConsumption()
+        pub_c._publishers.resetUnits()
+        pub_c._publishers.clearAllDeviceEnergyConsumption()
         # # save the total energy consumption
         # #pub_c._devices.calculateTotalEnergyConsumption()
         # #cc_energy_consumption = pub_c._devices._all_devices_energy_consumption
@@ -222,8 +222,8 @@ def main():
 
 # ==================== END OF SIMULATED ROUND ====================
         # end of round clean up
-        pub_c._devices.clearUnits()
-        pub_c._devices.clearAllDeviceEnergyConsumption()
+        pub_c._publishers.clearUnits()
+        pub_c._publishers.clearAllDeviceEnergyConsumption()
         topic_c.clearTopicDict()
         
         

@@ -23,6 +23,7 @@
 - system capability is created for each topic based on the device's 
 - NO THRESHOLD VARIANCE FUNCTIONS
   - uses `setup_default` to set defaults, threshold is manually varied with config file
+
 `experiment_setup` function
 - difference in setup between varying pub,sub,topic,and "default"
 - create sense timestamps 

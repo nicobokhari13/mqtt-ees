@@ -35,7 +35,7 @@ class Topic_Container:
         #print(topic_list)
         return topic_list
     
-    def updateQoS(self, topic_changed, sub_lat):
+    def updateFrequency(self, topic_changed, sub_lat):
         if self._topic_dict[topic_changed] < 0 or self._topic_dict[topic_changed] > sub_lat:
             self._topic_dict[topic_changed] = sub_lat
         else:

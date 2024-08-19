@@ -82,7 +82,7 @@ class MB:
                 else:
                     self._system_capability[newTask][0]+= 1
                 publishing_mac = self._system_capability[newTask][1][self._system_capability[newTask][0]]
-                pub_c._devices._units[publishing_mac].addTimestamp(timestamp=newTaskTimeStamp)
+                pub_c._publishers._devices[publishing_mac].addTimestamp(timestamp=newTaskTimeStamp)
             # by this point, all timestamps have been allocated to devices according to RR
             print("done with rr algo")
             # while len(timeline.keys()) > 0
@@ -97,23 +97,23 @@ class MB:
         while len(self._experiment_timeline.keys()) > 0:
             [newTask, newTaskTimeStamp] = self.findNextTask()
             bestMac = self._system_capability[newTask][1][0]
-            maxBattery = pub_c._devices._units[bestMac]._battery - pub_c._devices._units[bestMac]._consumption
+            maxBattery = pub_c._publishers._devices[bestMac]._battery - pub_c._publishers._devices[bestMac]._consumption
             for deviceMac in self._system_capability[newTask][1]:
-                macRemainingBattery = pub_c._devices._units[deviceMac]._battery - pub_c._devices._units[deviceMac]._consumption
+                macRemainingBattery = pub_c._publishers._devices[deviceMac]._battery - pub_c._publishers._devices[deviceMac]._consumption
                 if maxBattery < macRemainingBattery:
                     bestMac = deviceMac
                     maxBattery = macRemainingBattery
             # bestMac should have the mac of the device with the maximum remaining battery
 
             # update consumption with energy increase from adding timestamp
-            energy_consumed = pub_c._devices._units[bestMac].energyIncrease(task_timestamp=newTaskTimeStamp)
-            pub_c._devices._units[bestMac].updateConsumption(energy_increase=energy_consumed)
+            energy_consumed = pub_c._publishers._devices[bestMac].energyIncrease(task_timestamp=newTaskTimeStamp)
+            pub_c._publishers._devices[bestMac].updateConsumption(energy_increase=energy_consumed)
             #add timestamp 
-            pub_c._devices._units[bestMac].addTimestamp(timestamp=newTaskTimeStamp)
+            pub_c._publishers._devices[bestMac].addTimestamp(timestamp=newTaskTimeStamp)
 
             # update number of executions since energyIncrease depends on change in executions
-            bestMac_new_executions = pub_c._devices._units[bestMac].effectiveExecutions()
-            pub_c._devices._units[bestMac].setExecutions(new_value=bestMac_new_executions)
+            bestMac_new_executions = pub_c._publishers._devices[bestMac].effectiveExecutions()
+            pub_c._publishers._devices[bestMac].setExecutions(new_value=bestMac_new_executions)
         print("done with max_batt_algo")
             # set bestMac = first device in system capability of newTask
             # maxBattery = bestMac.battery - bestMac.consumption

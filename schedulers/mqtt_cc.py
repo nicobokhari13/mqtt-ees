@@ -82,14 +82,14 @@ class MQTTCC:
                 #print("\t devicemac = ", deviceMac)
                 # for each device capable of publishing to newTask
                 # calculate energy increase from adding the new task
-                Einc = pub_c._devices._units[deviceMac].energyIncrease(newTaskTimeStamp)
-                Enew = pub_c._devices._units[deviceMac]._consumption + Einc
-                Eratio = Enew / pub_c._devices._units[deviceMac]._battery
-                if (Emin < 0) or (Enew <= pub_c._devices._units[deviceMac]._battery and Eratio < Emin):
+                Einc = pub_c._publishers._devices[deviceMac].energyIncrease(newTaskTimeStamp)
+                Enew = pub_c._publishers._devices[deviceMac]._consumption + Einc
+                Eratio = Enew / pub_c._publishers._devices[deviceMac]._battery
+                if (Emin < 0) or (Enew <= pub_c._publishers._devices[deviceMac]._battery and Eratio < Emin):
                     bestMac = deviceMac
                     Emin = Eratio 
                     EincMin = Einc
-                if (Enew >= pub_c._devices._units[deviceMac]._battery):
+                if (Enew >= pub_c._publishers._devices[deviceMac]._battery):
                     #print("device reduced to 0 for observation periods >= ", constants.ConfigUtils._instance.OBSERVATION_PERIOD_MILISEC)
                     print("last time = ",newTaskTimeStamp)
                     endAlgo = True
@@ -110,11 +110,11 @@ class MQTTCC:
                 #print("device increase = ", EincMin)
                 #pub_c._devices._units[bestMac].addAssignment(added_topic=newTask, added_qos=topic_c._topic_dict[newTask])
                 # add the consumption estimate from mqttcc algo
-                pub_c._devices._units[bestMac].updateConsumption(EincMin)
+                pub_c._publishers._devices[bestMac].updateConsumption(EincMin)
                 # update number of executions
-                pub_c._devices._units[bestMac].addTimestamp(timestamp=newTaskTimeStamp)
-                bestMac_new_executions = pub_c._devices._units[bestMac].effectiveExecutions()
-                pub_c._devices._units[bestMac].setExecutions(new_value=bestMac_new_executions)
+                pub_c._publishers._devices[bestMac].addTimestamp(timestamp=newTaskTimeStamp)
+                bestMac_new_executions = pub_c._publishers._devices[bestMac].effectiveExecutions()
+                pub_c._publishers._devices[bestMac].setExecutions(new_value=bestMac_new_executions)
                 # add the task's timestamp to the device
                 #print("========")
         return None
