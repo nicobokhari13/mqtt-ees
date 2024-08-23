@@ -1,24 +1,28 @@
-from constants import ConfigUtils
 from datetime import datetime
-from container.publisher import Publisher_Container
-from container.topic import Topic_Container
-from container.subscriber import Subscriber_Container
 import random
 import sys
 import csv
+# Config Module
+from config_utils import ConfigUtils
+# Variable Containers 
+from container.publisher import Publisher_Container
+from container.topic import Topic_Container
+from container.subscriber import Subscriber_Container
+
+# Schedulers
 from schedulers.mqtt_cc import MQTTCC
-# from schedulers.round_robin import RR
-# from schedulers.max_batt import MB
-# from schedulers.min_task import MT
 from schedulers.random_algo import Random
 from schedulers.mqtt_algo import Standard
 
+
+
 #------------------------------------------#
 
-
-### GLOBAL CONSTANTS
+# User Input
 config_file = sys.argv[1]
 last_msg = sys.argv[2]
+
+
 # EXPERIMENT SET UP
 configuration = ConfigUtils()
 configuration.setConstants(configFilePath=config_file)
@@ -53,8 +57,9 @@ topic_c.setObservationPeriod(period=configuration.OBSERVATION_PERIOD_MILISEC)
 system_capability = {}
 
 #------------------------------------------#
+# Precondition: 
+# Postcondition:
 
-# Precondition: all the topic strings are created
 def createSystemCapability():
     capability = {topic: [-1, []] for topic in topic_c._topic_dict.keys()}
     for topic in topic_c._topic_dict.keys(): # for every topic
@@ -64,7 +69,8 @@ def createSystemCapability():
     return capability
 
 #------------------------------------------#
-
+# Precondition: 
+# Postcondition:
 
 def setup_exp_vary_pub():
     exp_num_pub = random.randint(3, configuration._max_pubs)
@@ -73,7 +79,8 @@ def setup_exp_vary_pub():
     pub_c.setupDevices(num_pubs=exp_num_pub)
 
 #------------------------------------------#
-
+# Precondition: 
+# Postcondition:
 
 def setup_exp_vary_sub():
     exp_num_subs = random.randint(3, configuration._max_subs)
@@ -82,6 +89,8 @@ def setup_exp_vary_sub():
     pub_c.setupDevices(num_pubs=0)
 
 #------------------------------------------#
+# Precondition: 
+# Postcondition:
 
 def setup_exp_vary_topic():
     exp_num_topics = random.randint(3, configuration._max_topics)
@@ -90,6 +99,8 @@ def setup_exp_vary_topic():
     pub_c.setupDevices(num_pubs=0)
 
 #------------------------------------------#
+# Precondition: 
+# Postcondition:
 
 def setup_default():
     topic_c.setupTopicStrings(numTopics=0)
@@ -97,7 +108,8 @@ def setup_default():
     pub_c.setupDevices(num_pubs=0)
 
 #------------------------------------------#
-
+# Precondition: 
+# Postcondition:
 
 # performed once before the rounds start
 def experiment_setup():
@@ -124,6 +136,8 @@ def experiment_setup():
     #print(system_capability)
 
 #------------------------------------------#
+# Precondition: 
+# Postcondition:
 
 # CSV Format for all files
     # algo_name, num_round, num_topic, num_pubs, num_subs, total_energy_consumption
@@ -146,6 +160,8 @@ def saveResults(algo_name:str, num_round, num_topic, num_pubs, num_subs, total_e
         writer.writerow(data)
 
 #------------------------------------------#
+# Precondition: 
+# Postcondition:
 
 def getConsumption():
     totalConsumption = 0
@@ -154,6 +170,8 @@ def getConsumption():
     return totalConsumption
 
 #------------------------------------------#
+# Precondition: 
+# Postcondition:
 
 def main():
     # create algo objects
@@ -219,28 +237,26 @@ def main():
         # pub_c._devices.clearAllDeviceEnergyConsumption()
 # ====================
         # run random
-        # timeEnd = rand.random_algo()
-        # if timeEnd is None:
-        #     timeEnd = "None"
-        # # # # save the total energy consumption
-        # # # #pub_c._devices.calculateTotalEnergyConsumption()
-        # # # #random_energy_consumption = pub_c._devices._all_devices_energy_consumption
-        # # # #random.saveDevicesTotalEnergyConsumed(round_energy_consumption=rr_energy_consumption)
-        # totalConsumption = getConsumption()
-        # saveResults(algo_name=rand._algo_name, time_end=timeEnd, num_round=round, num_topic=topic_c._total_topics, num_pubs=pub_c._total_devices, num_subs=sub_c._total_subs, total_energy_consumption=totalConsumption)
-        
-        # # # # reset experiment for next algorithm
-        # pub_c._devices.resetUnits()
-        # pub_c._devices.clearAllDeviceEnergyConsumption()
-# ====================
-        # run mqtt 
-        timeEnd = mqtt.mqtt_algo()
+        timeEnd = rand.random_algo()
         if timeEnd is None:
             timeEnd = "None"
+        # # # save the total energy consumption
+        # # #pub_c._devices.calculateTotalEnergyConsumption()
+        # # #random_energy_consumption = pub_c._devices._all_devices_energy_consumption
+        # # #random.saveDevicesTotalEnergyConsumed(round_energy_consumption=rr_energy_consumption)
         totalConsumption = getConsumption()
-        saveResults(algo_name=mqtt._algo_name, time_end=timeEnd, num_round=round, num_topic=topic_c._total_topics, num_pubs=pub_c._total_devices, num_subs=sub_c._total_subs, total_energy_consumption=totalConsumption)
+        saveResults(algo_name=rand._algo_name, time_end=timeEnd, num_round=round, num_topic=topic_c._total_topics, num_pubs=pub_c._total_devices, num_subs=sub_c._total_subs, total_energy_consumption=totalConsumption)
+        
+        # # # reset experiment for next algorithm
         pub_c._publishers.resetUnits()
         pub_c._publishers.clearAllDeviceEnergyConsumption()
+# ====================
+        # run mqtt 
+        # mqtt.mqtt_algo()
+        # totalConsumption = getConsumption()
+        # saveResults(algo_name=mqtt._algo_name, num_round=round, num_topic=topic_c._total_topics, num_pubs=pub_c._total_devices, num_subs=sub_c._total_subs, total_energy_consumption=totalConsumption)
+        # pub_c._devices.resetUnits()
+        # pub_c._devices.clearAllDeviceEnergyConsumption()
 # ====================
         # run mqtt-cc
         # cc.mqttcc_algo()

@@ -1,5 +1,7 @@
 # Walkthrough of `main.py`
 
+TODO: Use this to outline [`start.py`](/start.py) based on `main-ees.py`
+
 ## Outside of main function
 
 - acquire config file from system input

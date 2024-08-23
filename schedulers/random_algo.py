@@ -3,7 +3,7 @@ from container.topic import Topic_Container
 from container.subscriber import Subscriber_Container
 from copy import deepcopy
 import random 
-from constants import ConfigUtils
+from config_utils import ConfigUtils
 
 #------------------------------------------#
 
