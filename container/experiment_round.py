@@ -6,6 +6,4 @@ class Experiment_Round:
     
     # important attributes
     # round settings (# pub, sub, topic, system_capability)asdfz
-    # add future experimental parameters via inheritance
-    
     
