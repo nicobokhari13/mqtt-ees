@@ -2,7 +2,7 @@
 
 TODO: Use this to outline [`start.py`](/start.py) based on `main-ees.py`
 
-## Outside of main function
+## Outsiåde of main function
 
 - acquire config file from system input
 - perform config file setup
