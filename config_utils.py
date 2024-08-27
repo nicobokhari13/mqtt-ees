@@ -25,10 +25,10 @@ class ConfigUtils:
         # Observation Period
         self.OBSERVATION_PERIOD_MILISEC = int(self._config.get("CONSTANTS", "ob_period"))
         # Frequency Ranges
-        self._LAT_QOS_MIN = int(self._config.get("CONSTANTS", "lat_qos_min_ms"))
-        self._LAT_QOS_MAX = int(self._config.get("CONSTANTS", "lat_qos_max_ms"))
-        # Threshold
-        self._THRESHOLD_WINDOW = int(self._config.get("CONSTANTS", "threshold_ms"))
+        self.MIN_FREQ_MS = int(self._config.get("CONSTANTS", "min_freq_ms"))
+        self.MAX_FREQ_MS = int(self._config.get("CONSTANTS", "max_freq_ms"))
+        # Tail Window (ms)
+        self._tail_window_ms = int(self._config.get("CONSTANTS", "tail_window _ms"))
         # Energies
         self._sense_energy = float(self._config.get("CONSTANTS", "sense_energy"))
         self._comm_energy = float(self._config.get("CONSTANTS", "comm_energy"))

@@ -3,7 +3,7 @@ from container.topic import Topic_Container
 from container.subscriber import Subscriber_Container
 from copy import deepcopy
 import random 
-from constants import ConfigUtils
+from config_utils import ConfigUtils
 
 #------------------------------------------#
 
@@ -103,16 +103,16 @@ class Random:
                 random_index = random.randrange(start=0, stop=len(self._system_capability[newTask][1]))
                 self._system_capability[newTask][0] = random_index
                 publishing_mac = self._system_capability[newTask][1][random_index]
-                energyIncrease = pub_c._devices._units[publishing_mac].energyIncrease(task_timestamp=newTaskTimeStamp)
-                if energyIncrease + pub_c._devices._units[publishing_mac]._consumption >= pub_c._devices._units[publishing_mac]._battery:
+                energyIncrease = pub_c._publishers._devices[publishing_mac].energyIncrease(task_timestamp=newTaskTimeStamp)
+                if energyIncrease + pub_c._publishers._devices[publishing_mac]._consumption >= pub_c._publishers._devices[publishing_mac]._battery:
                     # save the current state
                     print("last time = ",newTaskTimeStamp)
                     endAlgo = True
                     # exit algorithm
                 else:
-                    pub_c._devices._units[publishing_mac].updateConsumption(energyIncrease)
-                    pub_c._devices._units[publishing_mac].addTimestamp(timestamp=newTaskTimeStamp)
-                    pub_c._devices._units[publishing_mac].setExecutions(new_value=pub_c._devices._units[publishing_mac].effectiveExecutions())
+                    pub_c._publishers._devices[publishing_mac].updateConsumption(energyIncrease)
+                    pub_c._publishers._devices[publishing_mac].addTimestamp(timestamp=newTaskTimeStamp)
+                    pub_c._publishers._devices[publishing_mac].setExecutions(new_value=pub_c._publishers._devices[publishing_mac].effectiveExecutions())
                 if endAlgo:
                     print("leaving random algo")
                     return newTaskTimeStamp

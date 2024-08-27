@@ -3,7 +3,7 @@ from container.topic import Topic_Container
 from container.subscriber import Subscriber_Container
 from copy import deepcopy
 import random 
-from constants import ConfigUtils
+from config_utils import ConfigUtils
 
 
 # to access the singleton instance easily
@@ -84,7 +84,7 @@ class Standard:
                 random_index = random.randrange(start=0, stop=len(self._system_capability[newTask][1]))
                 self._system_capability[newTask][0] = random_index
                 publishing_mac = self._system_capability[newTask][1][random_index]            
-                pub_c._devices._units[publishing_mac].addTimestamp(timestamp=newTaskTimeStamp)
+                pub_c._publishers._devices[publishing_mac].addTimestamp(timestamp=newTaskTimeStamp)
 
             print("done with random algo")
 
@@ -95,13 +95,13 @@ class Standard:
             [newTask, newTaskTimeStamp] = self.findNextTask()
             print("time = ", newTaskTimeStamp)
             for deviceMac in self._system_capability[newTask][1]:
-                energyIncrease = pub_c._devices._units[deviceMac].energyIncrease(task_timestamp=newTaskTimeStamp)
-                if energyIncrease + pub_c._devices._units[deviceMac]._consumption >= pub_c._devices._units[deviceMac]._battery:
+                energyIncrease = pub_c._publishers._devices[deviceMac].energyIncrease(task_timestamp=newTaskTimeStamp)
+                if energyIncrease + pub_c._publishers._devices[deviceMac]._consumption >= pub_c._publishers._devices[deviceMac]._battery:
                     endAlgo = True
                 else:
-                    pub_c._devices._units[deviceMac].updateConsumption(energyIncrease)
-                    pub_c._devices._units[deviceMac].addTimestamp(timestamp=newTaskTimeStamp)
-                    pub_c._devices._units[deviceMac].setExecutions(new_value=pub_c._devices._units[deviceMac].effectiveExecutions())
+                    pub_c._publishers._devices[deviceMac].updateConsumption(energyIncrease)
+                    pub_c._publishers._devices[deviceMac].addTimestamp(timestamp=newTaskTimeStamp)
+                    pub_c._publishers._devices[deviceMac].setExecutions(new_value=pub_c._publishers._devices[deviceMac].effectiveExecutions())
                 if endAlgo:
                     print("leaving standard mqtt algo")
                     break

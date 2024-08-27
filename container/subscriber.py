@@ -1,5 +1,5 @@
 import random
-from sim.container.topic import Topic_Container
+from container.topic import Topic_Container
 
 topic_c = Topic_Container()
 
@@ -12,19 +12,18 @@ class Subscriber_Container:
         return cls._instance
     
     def __init__(self) -> None:
-        # possibly set some constants
         self._total_subs = 0
         pass
 
     def setDefaultNumSubs(self, default_num_subs):
         self._default_num_subs = default_num_subs
 
-    def setLatencyMinMax(self, min, max):
+    def setFrequencyMinMax(self, min, max):
         self._lat_qos_min = min
         self._lat_qos_max = max
 
     # Precondition: Topics in Topic Container are created beforehand, defaults are set
-    def setUpLatQoS(self, num_subs):
+    def setUpSubscriberFrequencies(self, num_subs):
         if num_subs == 0:
             print(f"setting default subscribers {self._default_num_subs}")
             num_subs = self._default_num_subs
@@ -35,9 +34,8 @@ class Subscriber_Container:
             subscriptions = random.sample(population=topic_c._topic_dict.keys(), k=num_subscriptions)
             for subscription in subscriptions:
                 sub_lat_qos = random.randint(a=self._lat_qos_min, b=self._lat_qos_max)
-                topic_c.updateQoS(topic_changed=subscription, sub_lat=sub_lat_qos)
+                topic_c.updateFrequency(topic_changed=subscription, sub_lat=sub_lat_qos)
         self.ensureTopicCoverage()
-        #print(topic_c._topic_dict)
 
 
     def ensureTopicCoverage(self):

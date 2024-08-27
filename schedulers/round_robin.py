@@ -103,7 +103,7 @@ class RR:
                 else:
                     self._system_capability[newTask][0]+= 1
                 publishing_mac = self._system_capability[newTask][1][self._system_capability[newTask][0]]
-                pub_c._devices._units[publishing_mac].addTimestamp(timestamp=newTaskTimeStamp)
+                pub_c._publishers._devices[publishing_mac].addTimestamp(timestamp=newTaskTimeStamp)
             # by this point, all timestamps have been allocated to devices according to RR
             print("done with rr algo")
             # while len(timeline.keys()) > 0

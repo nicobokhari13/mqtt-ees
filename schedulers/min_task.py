@@ -82,7 +82,7 @@ class MT:
                 else:
                     self._system_capability[newTask][0]+= 1
                 publishing_mac = self._system_capability[newTask][1][self._system_capability[newTask][0]]
-                pub_c._devices._units[publishing_mac].addTimestamp(timestamp=newTaskTimeStamp)
+                pub_c._publishers._devices[publishing_mac].addTimestamp(timestamp=newTaskTimeStamp)
             # by this point, all timestamps have been allocated to devices according to RR
             print("done with rr algo")
             # while len(timeline.keys()) > 0
@@ -99,13 +99,13 @@ class MT:
                 #print(self._system_capability)
                 [newTask, newTaskTimeStamp] = self.findNextTask()
                 bestMac = self._system_capability[newTask][1][0]
-                minTasks = len(pub_c._devices._units[bestMac]._sense_timestamp)
+                minTasks = len(pub_c._publishers._devices[bestMac]._sense_timestamp)
                 for mac in self._system_capability[newTask][1]:
-                    macNumTasks = len(pub_c._devices._units[mac]._sense_timestamp)
+                    macNumTasks = len(pub_c._publishers._devices[mac]._sense_timestamp)
                     if macNumTasks < minTasks:
                         bestMac = mac
                         minTasks = macNumTasks 
-                pub_c._devices._units[bestMac].addTimestamp(timestamp=newTaskTimeStamp)
+                pub_c._publishers._devices[bestMac].addTimestamp(timestamp=newTaskTimeStamp)
                 
         print("done with min_task_algo")
                 # set bestMac = first device in system capability of newTask
