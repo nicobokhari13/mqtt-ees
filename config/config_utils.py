@@ -1,4 +1,5 @@
 import configparser
+from config_monitor import ConfigMonitor
 
 class ConfigUtils:
     ### Singleton Instance
@@ -11,9 +12,31 @@ class ConfigUtils:
 
     def __init__(self):
         self._config = configparser.ConfigParser()
+        self._monitor = ConfigMonitor()
 
 #------------------------------------------#
+# PRECONDITION:
+# PARAMETERS:
+#
 
+def saveFilePath(self, configFilePath):
+    self._CONFIG_FILE_PATH = configFilePath
+    pass 
+
+def setConstants(self):
+    self._config.read(self._CONFIG_FILE_PATH)
+    pass
+
+def validateConfigValues(self):
+    # the monitor provides the raw logic
+    # config utils actully performs actions to 
+    pass
+
+# POSTCONDITION:
+#
+
+
+#------------------------------------------#
 
     # PRECONDITION: ConfigUtils already initialized
     # PARAMETERS:
@@ -49,3 +72,9 @@ class ConfigUtils:
 
 
 
+#------------------------------------------#
+# PRECONDITION:
+# PARAMETERS:
+#
+# POSTCONDITION:
+#
