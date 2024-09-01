@@ -1,4 +1,4 @@
-from config.config_utils import ConfigUtils
+from config.config_mgmt import *
 from datetime import datetime
 from container.publisher import Publisher_Container
 from container.topic import Topic_Container
@@ -8,15 +8,12 @@ import sys
 import csv
 from schedulers.mqtt_cc import MQTTCC
 # Hold main execution
-global system
 
 def main():
     print("hello world")
-    pass
+    # get command line input
+    instantiateConfig()
 
-if __name__ == "__main__":
-    main()
-# command line input 
 
 # based on command line input, modify experiment modes
     # experiment mode (lifespan or energy usage)
@@ -24,11 +21,14 @@ if __name__ == "__main__":
         # random
         # mqtt-ees
         # mqtt
+    # experiment manager set up
+    # TODO: Whiteboard out start.py input parameters impact experiment round properties (json at runtime) 
+        # what experiment_manager may use in
+
+    pass
+
+if __name__ == "__main__":
+    main()
 
 
-# experiment manager set up
-
-    # config setup
-    
-    
-# 
+        
