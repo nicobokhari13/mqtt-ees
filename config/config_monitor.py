@@ -1,20 +1,27 @@
+CONFIG_VALID = "Valid"
+CONFIG_INVALID = "Invalid"
+CONFIG_EXPERIMENT_APPROVED = "Experiment approved"
+CONFIG_EXPERIMENT_NOT_APPROVED = "Experiment not approved"
+
 class ConfigMonitor:
     ### Singleton Instance
     _instance = None
-    
+
     def __new__(cls, *args, **kwargs):
         if cls._instance is None:
             cls._instance = super().__new__(cls, *args, **kwargs)
         return cls._instance
     
     def __init(self):
-        pass
+        pass 
 
-# TODO : print config status at the beginng of each experiment round
+    def validConfigMinMaxRange(self, range_min, range_max):
 
-# TODO: Verify that the config file is valid
-    # if the vary_* = true then default_num_* = -1
-        # if not, invalid
-    # other invalids 
-        # decimal, string for integers, etc
-        # 
+        if (range_min > range_max) or (range_min <= 0) or (range_max <= 0): 
+            return CONFIG_INVALID
+        return CONFIG_VALID
+
+    def nonZero(self, value):
+        if (value == 0):
+            return CONFIG_INVALID
+        return CONFIG_VALID

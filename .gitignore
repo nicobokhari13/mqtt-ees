@@ -1,5 +1,6 @@
 # stop tracking results folder (issues with file names on WSL/Windows)
 results/
+temp/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

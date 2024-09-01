@@ -1,4 +1,4 @@
-from config_utils import ConfigUtils
+from config.config_mgmt import *
 from datetime import datetime
 from container.publisher import Publisher_Container
 from container.topic import Topic_Container
@@ -11,29 +11,24 @@ from schedulers.mqtt_cc import MQTTCC
 
 def main():
     print("hello world")
-    pass
+    # get command line input
+    instantiateConfig()
 
-if __name__ == "__main__":
-    main()
-# command line input
 
-# based on command line input, modify config file
-    # experiment mode
+# based on command line input, modify experiment modes
+    # experiment mode (lifespan or energy usage)
     # schedulers
         # random
         # mqtt-ees
         # mqtt
-    # all via flags -> change config file for scheduler/experiment specific info
-        # for example, publishers taking the minimum frequency from all subscriptions on a topic
-        # turn on topic subscription frequency persistence
-            # when a subscriber leaves and the frequency they required was the minimum, 
-            # update the minimum -> update the frequency of the topic
+    # experiment manager set up
+    # TODO: Whiteboard out start.py input parameters impact experiment round properties (json at runtime) 
+        # what experiment_manager may use in
+
+    pass
+
+if __name__ == "__main__":
+    main()
 
 
-# experiment manager set up
-
-    # config setup
-    
-    # try custom exception handling if config is incompatible
-    
-# 
+        
