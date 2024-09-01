@@ -33,7 +33,6 @@ class ConfigUtils:
             "tail_window_ms" : self._config.getboolean("VARS", "vary_tail_window_ms"), 
         }
 
-        # TODO; move tail window use to experiment and triggered via "vary_tail_window_ms"
 
         # RANGES
         topic_range = list(map(int,self._config.get("RANGES", "topic_range").split(",")))

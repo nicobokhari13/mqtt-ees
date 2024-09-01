@@ -9,5 +9,5 @@ class Experiment_Manager:
     # holds scheduler instances 
         # setup + teardown of their states for each round performed
     # holds round instance
-    # holds config
-    # calls config monitor to ensure config is possible
+    
+    # TODO; move tail window use to experiment and triggered via "vary_tail_window_ms"

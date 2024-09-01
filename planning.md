@@ -1,5 +1,13 @@
 # To Do
 
+## 9-1-24 Finished Config Monitor and Template Config
+
+`experiment-runner` branch
+- start.py mimics `main_ees.py`, see [`main_walkthrough.md`](/vtc-f24-experiment-runners/main_walkthrough.md)
+- concurrent execution via thread or process?
+  - see [multiprocessing module](https://docs.python.org/3/library/multiprocessing.html)
+
+  
 ## 8-8-24 Switch to Inspiron Dev
 
 New development laptop just droppped
