@@ -1,5 +1,5 @@
 import configparser
-from config_monitor import ConfigMonitor
+from config_monitor import * 
 
 class ConfigUtils:
     ### Singleton Instance
@@ -25,12 +25,62 @@ def saveFilePath(self, configFilePath):
 
 def setConstants(self):
     self._config.read(self._CONFIG_FILE_PATH)
-    pass
+
+    # RANGES
+    topic_range = list(map(int,self._config.get("RANGES", "topic_range").split(",")))
+    sub_range = self._config.get("RANGES", "sub_range").split(",")
+    pub_range = self._config.get("RANGES", "pub_range").split(",")
+    tail_window_range = list(map(int,self._config.get("RANGES", "tail_window_range").split(",")))
+    freq_ms_range = self._config.get("RANGES", "freq_ms_range").split(",")
+    freq_ms_range = list(map(int, freq_ms_range))
+    
+    # Variables
+    self.TOPIC_MIN = topic_range[0]
+    self.TOPIC_MAX = topic_range[1]
+
+    self.SUBSCRIBER_MIN = sub_range[0]
+    self.SUBSCRIBER_MAX = sub_range[1]
+
+    self.PUBSCRIBER_MIN = pub_range[0]
+    self.PUBSCRIBER_MAX = pub_range[1]
+
+    self.FREQ_MS_MIN = freq_ms_range[0]
+    self.FREQ_MS_MAX = freq_ms_range[1]
+
+        # DEFAULTS
+    self.DEFAULT_PUBSCRIBER = int(self._config.get("DEFAULTS", "def_num_pubs"))
+    self.DEFAULT_SUBSCRIBER = int(self._config.get("DEFAULTS", "def_num_subs"))
+    self.DEFAULT_TOPIC = int(self._config.get("DEFAULTS", "def_num_topics")) 
+
+    # Energies
+    self.SENSE_ENERGY = float(self._config.get("CONSTANTS", "sense_energy"))
+    self.COMM_ENERGY = float(self._config.get("CONSTANTS", "comm_energy"))
+
+
+
+
+
+    # CONSTANTS 
+
+    # Observation Period
+    self.OBSERVATION_PERIOD_MILISEC = int(self._config.get("CONSTANTS", "ob_period"))
+
+    # Tail Window (ms)
+    # self._tail_window_ms = int(self._config.get("CONSTANTS", "tail_window _ms"))
+    # TODO; move tail window use to experiment and triggered via bash script flags
+    
+
+
+
+   
+
 
 def validateConfigValues(self):
     # the monitor provides the raw logic
-    # config utils actully performs actions to 
+    # config utils actully performs actions to stop the experiment if config monitor returns False
     pass
+
+# TODO : print config status at the beginng of each experiment round
 
 # POSTCONDITION:
 #

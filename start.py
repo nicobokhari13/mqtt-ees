@@ -1,4 +1,4 @@
-from config_utils import ConfigUtils
+from config.config_utils import ConfigUtils
 from datetime import datetime
 from container.publisher import Publisher_Container
 from container.topic import Topic_Container
@@ -17,7 +17,7 @@ if __name__ == "__main__":
     main()
 # command line input
 
-# based on command line input, modify config file
+# based on command line input, modify experiment modes
     # experiment mode
     # schedulers
         # random
