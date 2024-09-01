@@ -13,18 +13,15 @@ class ConfigMonitor:
         return cls._instance
     
     def __init(self):
-        self._STATUS = CONFIG_VALID
+        pass 
 
-    def checkConfigMinMaxRange(self, range_min, range_max):
+    def validConfigMinMaxRange(self, range_min, range_max):
 
         if (range_min > range_max) or (range_min <= 0) or (range_max <= 0): 
             return CONFIG_INVALID
-        else:
-            return CONFIG_VALID
+        return CONFIG_VALID
 
-# TODO: Verify that the config file is valid
-    # if the vary_* = true then default_num_* = -1
-        # if not, invalid
-    # other invalids 
-        # decimal, string for integers, etc
-        # 
+    def nonZero(self, value):
+        if (value == 0):
+            return CONFIG_INVALID
+        return CONFIG_VALID

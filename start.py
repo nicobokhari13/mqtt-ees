@@ -8,6 +8,7 @@ import sys
 import csv
 from schedulers.mqtt_cc import MQTTCC
 # Hold main execution
+global system
 
 def main():
     print("hello world")
@@ -15,25 +16,19 @@ def main():
 
 if __name__ == "__main__":
     main()
-# command line input
+# command line input 
 
 # based on command line input, modify experiment modes
-    # experiment mode
+    # experiment mode (lifespan or energy usage)
     # schedulers
         # random
         # mqtt-ees
         # mqtt
-    # all via flags -> change config file for scheduler/experiment specific info
-        # for example, publishers taking the minimum frequency from all subscriptions on a topic
-        # turn on topic subscription frequency persistence
-            # when a subscriber leaves and the frequency they required was the minimum, 
-            # update the minimum -> update the frequency of the topic
 
 
 # experiment manager set up
 
     # config setup
     
-    # try custom exception handling if config is incompatible
     
 # 
