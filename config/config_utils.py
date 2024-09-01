@@ -28,11 +28,13 @@ def setConstants(self):
 
     # RANGES
     topic_range = list(map(int,self._config.get("RANGES", "topic_range").split(",")))
-    sub_range = self._config.get("RANGES", "sub_range").split(",")
-    pub_range = self._config.get("RANGES", "pub_range").split(",")
+    sub_range = list(map(int,self._config.get("RANGES", "sub_range").split(",")))
+    pub_range = list(map(int,self._config.get("RANGES", "pub_range").split(",")))
+
     tail_window_range = list(map(int,self._config.get("RANGES", "tail_window_range").split(",")))
-    freq_ms_range = self._config.get("RANGES", "freq_ms_range").split(",")
-    freq_ms_range = list(map(int, freq_ms_range))
+        # get the list of tail window values availale to simulate
+    freq_ms_range = list(map(int, self._config.get("RANGES", "freq_ms_range").split(",")))
+        # get the min and max values of sensing frequencies
     
     # Variables
     self.TOPIC_MIN = topic_range[0]
