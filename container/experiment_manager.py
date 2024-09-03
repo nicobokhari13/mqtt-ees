@@ -2,8 +2,18 @@ class Experiment_Manager:
 
     # constructor
     def __init__(self) -> None:
+        
+        results_folder_path = "results/"
+        filename_prefix = "results_"
+        # experiment results defined by 
+            # experiment mode
+            # variable used
+            # datetime experiment started + process id
+
         pass
+
     
+
     # important attributes
     # handle threads for concurrently running experiment modes
     # holds scheduler instances 

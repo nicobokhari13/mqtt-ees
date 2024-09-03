@@ -40,6 +40,7 @@ class ConfigUtils:
         pub_range = list(map(int,self._config.get("RANGES", "pub_range").split(",")))
         freq_ms_range = list(map(int, self._config.get("RANGES", "freq_ms_range").split(",")))
             # get the min and max values of sensing frequencies
+        
         self.TAIL_WINDOW_RANGE = list(map(int,self._config.get("RANGES", "tail_window_range").split(",")))
             # get the list of tail window values availale to simulate
 

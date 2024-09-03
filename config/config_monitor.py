@@ -22,6 +22,6 @@ class ConfigMonitor:
         return CONFIG_VALID
 
     def nonZero(self, value):
-        if (value == 0):
+        if (value <= 0):
             return CONFIG_INVALID
         return CONFIG_VALID

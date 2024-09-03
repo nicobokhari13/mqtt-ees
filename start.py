@@ -12,8 +12,6 @@ from schedulers.mqtt_cc import MQTTCC
 def main():
     print("hello world")
     # get command line input
-    instantiateConfig()
-
 
 # based on command line input, modify experiment modes
     # experiment mode (lifespan or energy usage)
@@ -24,6 +22,7 @@ def main():
     # experiment manager set up
     # TODO: Whiteboard out start.py input parameters impact experiment round properties (json at runtime) 
         # what experiment_manager may use in
+    instantiateConfig()
 
     pass
 

@@ -2,11 +2,12 @@
 
 TODO: Use this to outline [`start.py`](/start.py) based on `main-ees.py`
 
-## Outsiåde of main function
+## Outside of main function
 
 - acquire config file from system input
 - perform config file setup
 - set up file paths for experiment results (publisher, subscriber, topic, and threshold)
+- experiment manager holds
 - create containers for publishers, subscriber, and topic
 - set other attributes + constants
 - instantiate global instance of system capability

@@ -12,7 +12,6 @@ from schedulers.mqtt_cc import MQTTCC
 # from min_task import MT
 from schedulers.random_algo import Random
 from schedulers.mqtt_algo import Standard
-
 #------------------------------------------#
 
 
