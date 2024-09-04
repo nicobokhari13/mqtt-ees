@@ -6,7 +6,25 @@
 - start.py mimics `main_ees.py`, see [`main_walkthrough.md`](/vtc-f24-experiment-runners/main_walkthrough.md)
 - concurrent execution via thread or process?
   - see [multiprocessing module](https://docs.python.org/3/library/multiprocessing.html)
+- start.py uses flag parsing, then move execution to experiment runner
+- use argparser [for flags](https://stackoverflow.com/questions/11604653/how-to-add-command-line-arguments-with-flags-in-python3)
+  - not using cli-args-system : `pip3 install cli-args-system` because package manaagement not necessary with this codebase
 
+```python
+from cli_args_system import Args
+
+#for dont try to convert the host
+args = Args(convert_numbers=False)
+
+hostname = args.flag_str('h','hostname','host')
+username = args.flag_str('u','user','username','password')
+password = args.flag_str('p','password')
+
+
+print(f'host: {hostname}')
+print(f'username: {username}')
+print(f'password: {password}')
+```
   
 ## 8-8-24 Switch to Inspiron Dev
 
