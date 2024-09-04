@@ -18,16 +18,16 @@ print( "Hostname {} db {} User {} Password {} size {} ".format(
         args.password,
         args.binsize
         ))
-def ConnectToDB():
-    print ('Trying to connect to mySQL server')
-    # Try to connect to the database
-    try:
-        con=sql.connect(host=args.hostname, user= args.username, passwd= args.password)
-        print ('\nConnected to Database\n')
+# # def ConnectToDB():
+#     print ('Trying to connect to mySQL server')
+#     # Try to connect to the database
+#     try:
+#         con=sql.connect(host=args.hostname, user= args.username, passwd= args.password)
+#         print ('\nConnected to Database\n')
 
-    # If we cannot connect to the database, send an error to the user and exit the program.
-    except sql.Error:
-        print ("Error %d: %s" % (sql.Error.args[0],sql.Error.args[1]))
-        sys.exit(1)
+#     # If we cannot connect to the database, send an error to the user and exit the program.
+#     except sql.Error:
+#         print ("Error %d: %s" % (sql.Error.args[0],sql.Error.args[1]))
+#         sys.exit(1)
 
-    return con
+#     return con

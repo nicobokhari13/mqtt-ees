@@ -1,4 +1,4 @@
-from config_utils import ConfigUtils
+from config.config_utils import ConfigUtils
 from datetime import datetime
 from container.publisher import Publisher_Container
 from container.topic import Topic_Container
