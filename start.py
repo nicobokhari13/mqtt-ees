@@ -7,6 +7,17 @@ parser.add_argument("-p", "--password",dest = "password", help="Password")
 parser.add_argument("-size", "--binsize",dest = "binsize", help="Size", type=int)
 
 args = parser.parse_args()
+
+# TODO: Determine optional + required flags for an experiment
+    # config file path
+    # experiment modes
+        # energy consumption
+        # system lifespan 
+    # scheduler
+        # MQTT-EES
+        # Random
+        # MQTT (lifespan only)
+
 # Hold main execution
 
 def main():
