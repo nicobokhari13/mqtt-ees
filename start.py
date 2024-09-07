@@ -1,43 +1,57 @@
 import argparse
-
+from config.config_mgmt import *
 parser = argparse.ArgumentParser()
-#-u USERNAME -p PASSWORD -size 20000
-parser.add_argument("-u", "--username",dest ="username", help="User name")
-parser.add_argument("-p", "--password",dest = "password", help="Password")
-parser.add_argument("-size", "--binsize",dest = "binsize", help="Size", type=int)
+
+#-config for config file path
+config_help_string =    """
+                        A valid file path to a configuration inii file. 
+                        See example configuration in config_example.ini
+                        """
+
+experiment_mode_help_string =    """
+                            The experiment modes supported track different metrics, and result in different results files.
+                            The following are the only options
+                            lifespan, energy
+                            """
+
+#-sched for schedulers
+sched_help_string =   """
+                Comma delimited list of schedulers to run in experiment. \n
+                Values include: mqttees,random,mqtt
+                """
+
+parser.add_argument("-config", "--configuration",dest ="config_file", help=config_help_string, type=str)
+parser.add_argument("-mode", "--experimentmode",dest ="experiment_mode", help=experiment_mode_help_string, type=str)
+parser.add_argument("-scheds", "--schedulers",dest ="schedulers", help=sched_help_string, type=str)
 
 args = parser.parse_args()
 
-# TODO: Determine optional + required flags for an experiment
-    # config file path
-    # experiment modes
-        # energy consumption
-        # system lifespan 
-    # scheduler
-        # MQTT-EES
-        # Random
-        # MQTT (lifespan only)
 
 # Hold main execution
 
 def main():
-    print("Username {}, Password {} Size {}".format(args.username, args.password, args.binsize))
+    config_file = args.config_file
+    experiment_mode = args.experiment_mode.split(",")
+    schedulers = args.schedulers.split(",")
 
-    print("hello world")
-    # get command line input
+    print(f"config file path: {config_file , type(config_file)}")
+    print(f"experiment mode: {experiment_mode, type(experiment_mode)}")
+    print(f"using schedulders : {schedulers, type(schedulers)}") 
+    
+    if "energy" in experiment_mode and "mqtt" in schedulers: 
+        print("cannot schedule mqtt base protocol with energy consumption simulation. Use ees and/or random scheduling")
+        exit()
 
-# based on command line input, modify experiment modes
-    # experiment mode (lifespan or energy usage)
-    # schedulers
-        # random
-        # mqtt-ees
-        # mqtt
-    # experiment manager set up
-    # TODO: Whiteboard out start.py input parameters impact experiment round properties (json at runtime) 
-        # what experiment_manager may use in
-    #instantiateConfig()
+    instantiateConfig(configuration_file=config_file)
+    config_status = verifyConfig()
+    if config_status == CONFIG_INVALID or config_status is None: 
+        print("configuration is invalid or the Configuration File was not created")
+        exit()
+    else: # configuration is valid, ready to start experiment
+        # create experiment manager
 
-    pass
+        pass
+
 
 if __name__ == "__main__":
     main()

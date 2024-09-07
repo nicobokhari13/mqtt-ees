@@ -2,7 +2,7 @@ from container.publisher import Publisher_Container
 from container.topic import Topic_Container
 from container.subscriber import Subscriber_Container
 from copy import deepcopy
-from config_utils import ConfigUtils
+from config.config_utils import ConfigUtils
 
 #------------------------------------------#
 
@@ -79,7 +79,6 @@ class MQTTCC:
             Eratio = None
             bestMac = None
             for deviceMac in self._system_capability[newTask][1]:
-                #print("\t devicemac = ", deviceMac)
                 # for each device capable of publishing to newTask
                 # calculate energy increase from adding the new task
                 Einc = pub_c._publishers._devices[deviceMac].energyIncrease(newTaskTimeStamp)
@@ -90,7 +89,6 @@ class MQTTCC:
                     Emin = Eratio 
                     EincMin = Einc
                 if (Enew >= pub_c._publishers._devices[deviceMac]._battery):
-                    #print("device reduced to 0 for observation periods >= ", constants.ConfigUtils._instance.OBSERVATION_PERIOD_MILISEC)
                     print("last time = ",newTaskTimeStamp)
                     endAlgo = True
                     # exit algorithm
@@ -98,23 +96,14 @@ class MQTTCC:
                     break
             if endAlgo:
                 print("leaving mqtt_cc algo")
-                return newTaskTimeStamp
+                return newTaskTimeStamp 
             if bestMac:
                 # After each allocation
                     # update the consumption
                     # add the timestmap
                     # update the number of executions since efficient energy index depends on executions
-                # if the device is the best for the new task
-                # assign it to the device
-                #print("best mac = ", bestMac)
-                #print("device increase = ", EincMin)
-                #pub_c._devices._units[bestMac].addAssignment(added_topic=newTask, added_qos=topic_c._topic_dict[newTask])
-                # add the consumption estimate from mqttcc algo
                 pub_c._publishers._devices[bestMac].updateConsumption(EincMin)
-                # update number of executions
                 pub_c._publishers._devices[bestMac].addTimestamp(timestamp=newTaskTimeStamp)
                 bestMac_new_executions = pub_c._publishers._devices[bestMac].effectiveExecutions()
                 pub_c._publishers._devices[bestMac].setExecutions(new_value=bestMac_new_executions)
-                # add the task's timestamp to the device
-                #print("========")
         return None

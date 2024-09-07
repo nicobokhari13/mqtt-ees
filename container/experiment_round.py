@@ -5,5 +5,9 @@ class Experiment_Round:
         pass
     
     # important attributes
-    # round settings (# pub, sub, topic, system_capability)asdfz
+    # round settings
+        # variable (pub, sub, topic, tail window)
+        # ob_period = default or scheduler specific if using lifespan experiment mode
+        # default values for everything else
+    # system_capability and 
     

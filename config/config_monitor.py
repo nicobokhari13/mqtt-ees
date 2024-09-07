@@ -1,7 +1,5 @@
 CONFIG_VALID = "Valid"
 CONFIG_INVALID = "Invalid"
-CONFIG_EXPERIMENT_APPROVED = "Experiment approved"
-CONFIG_EXPERIMENT_NOT_APPROVED = "Experiment not approved"
 
 class ConfigMonitor:
     ### Singleton Instance

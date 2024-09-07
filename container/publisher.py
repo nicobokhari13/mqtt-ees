@@ -2,8 +2,10 @@ from typing import Dict
 from copy import deepcopy
 from container.topic import Topic_Container
 import random
+from config.config_utils import ConfigUtils
 
 topic_c = Topic_Container()
+config_file = ConfigUtils()
 
 class Network:
     _instance = None
@@ -15,18 +17,6 @@ class Network:
     def __init__(self) -> None:
         self._devices: Dict[str, Device] = dict()
         self._all_devices_energy_consumption = 0
-
-    def setSensingEnergy(self, sense_energy):
-        self.SENSING_ENERGY = sense_energy
-
-    def setCommEnergy(self, comm_energy):
-        self.COMMUNICATION_ENERGY = comm_energy
-
-    def setTailWindow(self, tail_window):
-        self.CONCURRENCY_TAILWINDOW_MILISEC = tail_window
-
-    def setObservationPeriod(self, period):
-        self.OBSERVATION_PERIOD_MILISEC = period
 
     # Called after completing a round for 1 algorithm
     def resetUnits(self):
@@ -46,8 +36,8 @@ class Network:
     def calculateTotalEnergyConsumption(self):
         for device in self._devices.values():
             executions = device.effectiveExecutions()
-            device_energy_used = self.SENSING_ENERGY * len(device._sense_timestamp) + self.COMMUNICATION_ENERGY * executions
-            self._all_devices_energy_consumption+=device_energy_used
+            device_energy_used = config_file.SENSE_ENERGY * len(device._sense_timestamp) + config_file.COMM_ENERGY * executions
+            self._all_devices_energy_consumption += device_energy_used
 
 class Device:
 
@@ -85,7 +75,7 @@ class Device:
         self._num_executions_per_hour = new_value
 
     def updateConsumption(self, energy_increase):
-        self._consumption+=energy_increase
+        self._consumption += energy_increase
 
     def effectiveExecutions(self, new_task_timestamp = None):
         tail_window = Network._instance.CONCURRENCY_TAILWINDOW_MILISEC
@@ -122,36 +112,21 @@ class Publisher_Container:
     def __init__(self) -> None:
         self._publishers = Network()
         self._total_devices = 0
-    
-    # PERFORM THIS FUNCTION FIRST BEFORE ANYTHING ELSE
-    def setDefaultNumPubs(self, default_num_pubs):
-        self._default_num_pubs = default_num_pubs
 
-    def setEnergies(self, sense_energy, comm_energy):
-        self._publishers.setSensingEnergy(sense_energy)
-        self._publishers.setCommEnergy(comm_energy)
-
-    def setTailWindow(self, tailwindow):
-        self._publishers.setTailWindow(tailwindow)
-
-    def setObservationPeriod(self, period):
-        self._publishers.setObservationPeriod(period)
+    def setTotalDevices(self, num_devs):
+        self._total_devices = num_devs
 
     # Precondition: numPubs is a whole number > 0
-    def generatePublisherMacs(self, numPubs):
+    def generatePublisherMacs(self):
         pub_macs = []
-        for i in range(numPubs):
+        for i in range(self._total_devices):
             name = f"dev-{i}"
             pub_macs.append(name)
         return pub_macs
 
-    def setupDevices(self, num_pubs):
-        if num_pubs == 0:
-            print(f"setting default devices {self._default_num_pubs}")
-            num_pubs = self._default_num_pubs
-        self._total_devices = num_pubs
-        print(f"creating {num_pubs} devices")
-        device_macs = self.generatePublisherMacs(num_pubs)
+    def setupDevices(self):
+        print(f"creating {self._total_devices} devices")
+        device_macs = self.generatePublisherMacs()
         for mac in device_macs:
             self._publishers._devices[mac] = Device()
             self._publishers._devices[mac].setMac(mac)

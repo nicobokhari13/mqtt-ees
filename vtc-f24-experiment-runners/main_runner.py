@@ -1,4 +1,3 @@
-from config_utils import ConfigUtils
 from datetime import datetime
 from container.publisher import Publisher_Container
 from container.topic import Topic_Container
@@ -7,54 +6,17 @@ import random
 import sys
 import csv
 from schedulers.mqtt_cc import MQTTCC
-#from round_robin import RR
-# from max_batt import MB
-# from min_task import MT
 from schedulers.random_algo import Random
 from schedulers.mqtt_algo import Standard
 
 #------------------------------------------#
-
-config_file = sys.argv[1]
-last_msg = sys.argv[2]
-
-# EXPERIMENT SET UP
-configuration = ConfigUtils()
-configuration.setConstants(configFilePath=config_file)
-
-
-file_paths = {
-    "pub_path": "results_pubs/",
-    "sub_path": "results_subs/",
-    "topic_path": "results_topics/",
-    "threshold_path": "results_thresh/"
-}
-filename = "results_" + str(datetime.now()) + "_"
-
-# create containers
-pub_c = Publisher_Container()
-sub_c = Subscriber_Container()
-topic_c = Topic_Container()
-
-# Set Defaults
-pub_c.setDefaultNumPubs(configuration._default_num_pubs)
-sub_c.setDefaultNumSubs(configuration._default_num_subs)
-topic_c.setDefaultNumTopics(configuration._default_num_topics)
-
-# other constants
-sub_c.setFrequencyMinMax(min=configuration.MIN_FREQ_MS, max=configuration.MAX_FREQ_MS)
-pub_c.setEnergies(sense_energy=configuration._sense_energy, comm_energy=configuration._comm_energy)
-pub_c.setTailWindow(tailwindow=configuration._tail_window_ms)
-pub_c.setObservationPeriod(period=configuration.OBSERVATION_PERIOD_MILISEC)
-topic_c.setObservationPeriod(period=configuration.OBSERVATION_PERIOD_MILISEC)
 # create capability matrix
     # dictionary with
         # key = topic
-        # value = tuple (index of publishing device, [list of all capable devices])
+        # value = tuple (index of device publishing to key topic, [list of all devices capable of publishing to topic])
 system_capability = {}
 
 #------------------------------------------#
-
 
 # Precondition: all the topic strings are created
 def createSystemCapability():

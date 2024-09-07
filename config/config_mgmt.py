@@ -11,7 +11,7 @@ def instantiateConfig(configuration_file : str):
 
 def verifyConfig():
 
-    if(ConfigUtils._instance is None) or (ConfigMonitor._instance is None):
+    if(ConfigUtils._instance is None):
         return None
     configuration = ConfigUtils()
     monitor = ConfigMonitor()

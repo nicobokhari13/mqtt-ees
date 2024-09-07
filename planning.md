@@ -1,6 +1,9 @@
 # To Do
 
-## 9-5-24 Writing more TODOs in addition to experiment runner 
+## 9-8-24 Finish everything
+
+- try top-down approach with
+
 
 
 

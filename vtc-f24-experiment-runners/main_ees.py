@@ -7,9 +7,6 @@ import random
 import sys
 import csv
 from schedulers.mqtt_cc import MQTTCC
-#from round_robin import RR
-# from max_batt import MB
-# from min_task import MT
 from schedulers.random_algo import Random
 from schedulers.mqtt_algo import Standard
 #------------------------------------------#

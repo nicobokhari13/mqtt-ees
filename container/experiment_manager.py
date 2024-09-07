@@ -1,23 +1,99 @@
+from config.config_utils import ConfigUtils
+from container.publisher import Publisher_Container
+from container.subscriber import Subscriber_Container
+from container.topic import Topic_Container
+import random
+
 class Experiment_Manager:
 
     # constructor
-    def __init__(self) -> None:
+    def __init__(self):
+        self.config = ConfigUtils._instance
+        self.pub_c = Publisher_Container()
+        self.sub_c = Subscriber_Container()
+        self.topic_c = Topic_Container()
+        self.results_folder_path = "results/"
         
-        results_folder_path = "results/"
-        filename_prefix = "results_"
         # experiment results defined by 
             # experiment mode
             # variable used
-            # datetime experiment started + process id
+            # datetime experiment started
+    # Precondition: all the topic strings are created
+    def createSystemCapability(self):
+        capability = {topic: [-1, []] for topic in self.topic_c._topic_dict.keys()}
+        for topic in self.topic_c._topic_dict.keys(): # for every topic
+            for device in self.pub_c._publishers._devices.values(): # find the device
+                if device.capableOfPublishing(topic):
+                    capability[topic][1].append(device._device_mac)
+        return capability
+        # different for every round
 
-        pass
+    #------------------------------------------#
+
+    def setup_exp_vary_pub(self):
+        exp_num_pub = random.randint(self.config.PUBLISHER_MIN, self.config.PUBLISHER_MAX)
+        self.pub_c.setTotalDevices(num_devs=exp_num_pub)
+        self.topic_c.setTotalTopic(num_topics=self.config.DEFAULT_TOPIC)
+        self.sub_c.setTotalSubs(num_subs=self.config.DEFAULT_SUBSCRIBER)
+        self.topic_c.setupTopicStrings()
+        self.sub_c.setUpSubscriberFrequencies()
+        self.pub_c.setupDevices(num_pubs=exp_num_pub)
+
+    #------------------------------------------#
+
+
+    def setup_exp_vary_sub(self):
+        exp_num_subs = random.randint(3, self.config.)
+        self.topic_c.setupTopicStrings(numTopics=0)
+        self.sub_c.setUpSubscriberFrequencies(num_subs=exp_num_subs)
+        self.pub_c.setupDevices(num_pubs=0)
+
+    #------------------------------------------#
+
+    def setup_exp_vary_topic(self):
+        exp_num_topics = random.randint(3, configuration._max_topics)
+        topic_c.setupTopicStrings(numTopics=exp_num_topics)
+        sub_c.setUpSubscriberFrequencies(num_subs=0)
+        pub_c.setupDevices(num_pubs=0)
+
+
+    #------------------------------------------#
+
+    def setup_default(self):
+        topic_c.setupTopicStrings(numTopics=0)
+        sub_c.setUpSubscriberFrequencies(num_subs=0)
+        pub_c.setupDevices(num_pubs=0)
+
+    #------------------------------------------#
+
+
+    # performed once before the rounds start
+    def experiment_setup(self):
+        # based on the vary_xxx config settings, begin setup functions for the containers
+        if self.config._vary_pubs:
+            print("varying publishers")
+            self.setup_exp_vary_pub()
+        elif self.config._vary_subs:
+            print("varying subscribers")
+            self.setup_exp_vary_sub()        
+        elif self.config._vary_topics:
+            print("varying topics")
+            self.setup_exp_vary_topic()
+        elif self.config._vary_tail_window: 
+            print("varying tail windows")
+        else:
+            print("using defaults")
+            self.setup_default()
+            #sys.exit()
+        print("setting up timestamps")
+        self.topic_c.setupSenseTimestamps()
+        global system_capability 
+        print("setting up system capability")
+        system_capability = self.createSystemCapability()
+        #print(system_capability)
+        def setup_experiment(self):
+            variable = self.config.VARIABLES.next(True)
+            pass
+        
 
     
-
-    # important attributes
-    # handle threads for concurrently running experiment modes
-    # holds scheduler instances 
-        # setup + teardown of their states for each round performed
-    # holds round instance
-    
-    # TODO; move tail window use to experiment and triggered via "vary_tail_window_ms"

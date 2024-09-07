@@ -25,21 +25,19 @@ class ConfigUtils:
         self._config.read(self._CONFIG_FILE_PATH)
 
         # VARS
+            # holds variable: true/false
 
-        self.VARIABLES = {
-            "publishers" : self._config.getboolean("VARS", "vary_pubs"), 
-            "subscribers" : self._config.getboolean("VARS", "vary_subs"), 
-            "topics" : self._config.getboolean("VARS", "vary_topics"), 
-            "tail_window_ms" : self._config.getboolean("VARS", "vary_tail_window_ms"), 
-        }
-
+        self._vary_pubs = self._config.getboolean("VARS", "vary_pubs")
+        self._vary_subs = self._config.getboolean("VARS", "vary_subs")
+        self._vary_topics = self._config.getboolean("VARS", "vary_topics")
+        self._vary_tail_window = self._config.getboolean("VARS", "vary_tail_window_ms")
 
         # RANGES
+            # holds minimum, maximum for variable values
         topic_range = list(map(int,self._config.get("RANGES", "topic_range").split(",")))
         sub_range = list(map(int,self._config.get("RANGES", "sub_range").split(",")))
         pub_range = list(map(int,self._config.get("RANGES", "pub_range").split(",")))
         freq_ms_range = list(map(int, self._config.get("RANGES", "freq_ms_range").split(",")))
-            # get the min and max values of sensing frequencies
         
         self.TAIL_WINDOW_RANGE = list(map(int,self._config.get("RANGES", "tail_window_range").split(",")))
             # get the list of tail window values availale to simulate
@@ -58,22 +56,19 @@ class ConfigUtils:
         self.FREQ_MS_MAX = freq_ms_range[1]
 
         # DEFAULTS
-        self.DEFAULT_PUBSCRIBER = int(self._config.get("DEFAULTS", "def_val_pubs"))
+        self.DEFAULT_PUBLISHER = int(self._config.get("DEFAULTS", "def_val_pubs"))
         self.DEFAULT_SUBSCRIBER = int(self._config.get("DEFAULTS", "def_val_subs"))
         self.DEFAULT_TOPIC = int(self._config.get("DEFAULTS", "def_val_topics")) 
         self.DEFAULT_TAIL_WINDOW_MS = int(self._config.get("DEFAULTS", "def_val_tail_window_ms"))
-
-        # create a dictionary with key:value such that value = not(self.VARIABLES[key])
-        self.USE_DEFAULT = dict()
-        for key in self.VARIABLES.keys():
-            self.USE_DEFAULT[key] = not(self.VARIABLES[key])
+        self.DEFAULT_OB_PERIOD_MS = int(self._config.get("DEFAULTS", "default_val_ob_period_ms"))
 
         # CONSTANTS 
         self.SENSE_ENERGY = float(self._config.get("CONSTANTS", "sense_energy"))
         self.COMM_ENERGY = float(self._config.get("CONSTANTS", "comm_energy"))
         self.NUM_ROUNDS = int(self._config.get("CONSTANTS", "num_rounds"))
-        self.OBSERVATION_PERIOD_MS = int(self._config.get("CONSTANTS", "ob_period"))
-
+        self.RANDOM_LIFESPAN_CONST = int(self._config.get("CONSTANTS", "random_ob_period_ms"))
+        self.MQTT_LIFESPAN_CONST = int(self._config.get("CONSTANTS", "mqtt_ob_period_ms"))
+        self.EES_LIFESPAN_CONST = int(self._config.get("CONSTANTS", "ees_ob_period_ms"))
 #------------------------------------------#
 # PRECONDITION:
 # PARAMETERS:
