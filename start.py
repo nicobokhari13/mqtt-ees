@@ -31,14 +31,14 @@ args = parser.parse_args()
 
 def main():
     config_file = args.config_file
-    experiment_mode = args.experiment_mode.split(",")
+    experiment_mode = args.experiment_mode
     schedulers = args.schedulers.split(",")
 
     print(f"config file path: {config_file , type(config_file)}")
     print(f"experiment mode: {experiment_mode, type(experiment_mode)}")
     print(f"using schedulders : {schedulers, type(schedulers)}") 
     
-    if "energy" in experiment_mode and "mqtt" in schedulers: 
+    if experiment_mode == 'energy' and "mqtt" in schedulers: 
         print("cannot schedule mqtt base protocol with energy consumption simulation. Use ees and/or random scheduling")
         exit()
 
@@ -47,10 +47,11 @@ def main():
     if config_status == CONFIG_INVALID or config_status is None: 
         print("configuration is invalid or the Configuration File was not created")
         exit()
-    else: # configuration is valid, ready to start experiment
+    
+    print("configuration is ready, starting experiment setup")
+    # configuration is valid, ready to start experiment
         # create experiment manager
-        
-        pass
+    
 
 
 if __name__ == "__main__":

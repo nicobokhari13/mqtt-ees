@@ -50,15 +50,15 @@ class Topic_Container:
         # this object will be the same across all algorithms, need deepcopy for each
         # only created once per round
     def setupSenseTimestamps(self, observation_period):
-        self._all_sense_timestamps = {}
-        timestamp_list = []
+        all_sense_timestamps = {}
         for topic in self._topic_dict.keys():
             freq = self._topic_dict[topic]
             multiples = list(range(0, observation_period + 1, freq))
             # at the end of the loop timestamp_list has all of freq's timestamps < T
-            self._all_sense_timestamps[topic] = deepcopy(multiples)
+            all_sense_timestamps[topic] = deepcopy(multiples)
             # example, if topic/1 publishes every 10ms, then topic/1: [10,20,30...]
-
+        return all_sense_timestamps
+    
     def resetSenseTimestamps(self):
         self._all_sense_timestamps.clear() 
     

@@ -30,7 +30,6 @@ class ConfigUtils:
         self._vary_pubs = self._config.getboolean("VARS", "vary_pubs")
         self._vary_subs = self._config.getboolean("VARS", "vary_subs")
         self._vary_topics = self._config.getboolean("VARS", "vary_topics")
-        self._vary_tail_window = self._config.getboolean("VARS", "vary_tail_window_ms")
 
         # RANGES
             # holds minimum, maximum for variable values
@@ -39,7 +38,6 @@ class ConfigUtils:
         pub_range = list(map(int,self._config.get("RANGES", "pub_range").split(",")))
         freq_ms_range = list(map(int, self._config.get("RANGES", "freq_ms_range").split(",")))
         
-        self.TAIL_WINDOW_RANGE = list(map(int,self._config.get("RANGES", "tail_window_range").split(",")))
             # get the list of tail window values availale to simulate
 
             # get the min and max values of each range

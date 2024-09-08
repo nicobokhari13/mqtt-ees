@@ -5,6 +5,10 @@ from container.topic import Topic_Container
 import random
 from copy import deepcopy
 
+# if lifespan is the mode, use default tail 
+
+# if energy is the mode and vary are false, use default tail
+
 class Experiment_Manager:
 
     # constructor
@@ -17,6 +21,7 @@ class Experiment_Manager:
 
         self.run_energy_exp = False
         self.run_lifespan_exp = False
+
         # experiment results defined by 
             # experiment mode
             # variable used
@@ -27,6 +32,8 @@ class Experiment_Manager:
 
     def queueLifespanExperiment(self):
         self.run_lifespan_exp = True
+
+    def 
 
     def container_setup(self):
         self.topic_c.setupTopicStrings()
@@ -86,7 +93,6 @@ class Experiment_Manager:
 
     #------------------------------------------#
 
-
     # performed once before the rounds start
     def experiment_setup(self):
         # based on the vary_xxx config settings, begin setup functions for the containers
@@ -99,23 +105,37 @@ class Experiment_Manager:
         elif self.config._vary_topics:
             print("varying topics")
             self.setup_exp_vary_topic()
-        elif self.config._vary_tail_window: 
-            print("using defaults")
-            print("varying tail windows")
-            self.setup_default()
         else:
-            exit()
+            print("using defaults")
+            self.setup_default()
         print("setting up timestamps")
 
-        
+        timestamps = None
+        # if the experiment mode is lifespan, 
+            # the timestamps are different for each scheduler
+            # for algorithm in schedulers
+                # if algo == ees
+                    # period = config.consant.ees
+                # elif algo == mqtt
+                    # period = config.constant.mqtt
+                # elif algo == random
+                    # period = config.constant.random
+                # timestamps = topic.setupSenseTimestamps(self, period)
+
+
         self.topic_c.setupSenseTimestamps()
         global system_capability 
         print("setting up system capability")
         system_capability = self.createSystemCapability()
-        #print(system_capability)
-        def setup_experiment(self):
-            variable = self.config.VARIABLES.next(True)
-            pass
+
         
+    def run_ees(self):
+        pass
+
+    def run_random(self):
+        pass
+
+    def run_mqtt(self):
+        pass
 
     

@@ -37,10 +37,10 @@ class Random:
 #------------------------------------------#
 
 
-    def copyOfTopicTimeStamps(self):
+    def copyOfTopicTimeStamps(self, timestamps):
         # a dictionary with each topic's sense execution timestamp < T observation period
             # topic/1: [10,20,30...]
-        self._experiment_timeline = deepcopy(topic_c._all_sense_timestamps)
+        self._experiment_timeline = deepcopy(timestamps)
 
 #------------------------------------------#
 
