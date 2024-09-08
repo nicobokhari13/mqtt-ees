@@ -3,6 +3,7 @@ from container.publisher import Publisher_Container
 from container.subscriber import Subscriber_Container
 from container.topic import Topic_Container
 import random
+from copy import deepcopy
 
 class Experiment_Manager:
 
@@ -13,11 +14,25 @@ class Experiment_Manager:
         self.sub_c = Subscriber_Container()
         self.topic_c = Topic_Container()
         self.results_folder_path = "results/"
-        
+
+        self.run_energy_exp = False
+        self.run_lifespan_exp = False
         # experiment results defined by 
             # experiment mode
             # variable used
             # datetime experiment started
+
+    def queueEnergyExperiment(self):
+        self.run_energy_exp = True
+
+    def queueLifespanExperiment(self):
+        self.run_lifespan_exp = True
+
+    def container_setup(self):
+        self.topic_c.setupTopicStrings()
+        self.sub_c.setUpSubscriberFrequencies()
+        self.pub_c.setupDevices()
+
     # Precondition: all the topic strings are created
     def createSystemCapability(self):
         capability = {topic: [-1, []] for topic in self.topic_c._topic_dict.keys()}
@@ -35,34 +50,39 @@ class Experiment_Manager:
         self.pub_c.setTotalDevices(num_devs=exp_num_pub)
         self.topic_c.setTotalTopic(num_topics=self.config.DEFAULT_TOPIC)
         self.sub_c.setTotalSubs(num_subs=self.config.DEFAULT_SUBSCRIBER)
-        self.topic_c.setupTopicStrings()
-        self.sub_c.setUpSubscriberFrequencies()
-        self.pub_c.setupDevices(num_pubs=exp_num_pub)
+
+        self.container_setup()
+
 
     #------------------------------------------#
 
 
     def setup_exp_vary_sub(self):
-        exp_num_subs = random.randint(3, self.config.)
-        self.topic_c.setupTopicStrings(numTopics=0)
-        self.sub_c.setUpSubscriberFrequencies(num_subs=exp_num_subs)
-        self.pub_c.setupDevices(num_pubs=0)
+        exp_num_subs = random.randint(self.config.SUBSCRIBER_MIN, self.config.SUBSCRIBER_MAX)
+        self.pub_c.setTotalDevices(num_devs=self.config.DEFAULT_PUBLISHER)
+        self.topic_c.setTotalTopic(num_topics=self.config.DEFAULT_TOPIC)
+        self.sub_c.setTotalSubs(num_subs=exp_num_subs)
+
+        self.container_setup()
 
     #------------------------------------------#
 
     def setup_exp_vary_topic(self):
-        exp_num_topics = random.randint(3, configuration._max_topics)
-        topic_c.setupTopicStrings(numTopics=exp_num_topics)
-        sub_c.setUpSubscriberFrequencies(num_subs=0)
-        pub_c.setupDevices(num_pubs=0)
+        exp_num_topics = random.randint(self.config.TOPIC_MIN, self.config.TOPIC_MAX)
+        self.pub_c.setTotalDevices(num_devs=self.config.DEFAULT_PUBLISHER)
+        self.sub_c.setTotalSubs(num_subs=self.config.DEFAULT_SUBSCRIBER)
+        self.topic_c.setTotalTopic(num_topics=exp_num_topics)
 
+        self.container_setup()
 
     #------------------------------------------#
 
     def setup_default(self):
-        topic_c.setupTopicStrings(numTopics=0)
-        sub_c.setUpSubscriberFrequencies(num_subs=0)
-        pub_c.setupDevices(num_pubs=0)
+        self.pub_c.setTotalDevices(num_devs=self.config.DEFAULT_PUBLISHER)
+        self.sub_c.setTotalSubs(num_subs=self.config.DEFAULT_SUBSCRIBER)
+        self.topic_c.setTotalTopic(num_topics=self.config.DEFAULT_TOPIC)
+        
+        self.container_setup()
 
     #------------------------------------------#
 
@@ -80,12 +100,14 @@ class Experiment_Manager:
             print("varying topics")
             self.setup_exp_vary_topic()
         elif self.config._vary_tail_window: 
-            print("varying tail windows")
-        else:
             print("using defaults")
+            print("varying tail windows")
             self.setup_default()
-            #sys.exit()
+        else:
+            exit()
         print("setting up timestamps")
+
+        
         self.topic_c.setupSenseTimestamps()
         global system_capability 
         print("setting up system capability")
