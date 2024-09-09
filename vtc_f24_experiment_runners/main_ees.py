@@ -50,7 +50,7 @@ system_capability = {}
 #------------------------------------------#
 
 
-# Precondition: all the topic strings are created
+# Precondition: all the topic strings are created, and the devices generated their capability
 def createSystemCapability():
     capability = {topic: [-1, []] for topic in topic_c._topic_dict.keys()}
     for topic in topic_c._topic_dict.keys(): # for every topic

@@ -1,5 +1,8 @@
 import argparse
+import os
 from config.config_mgmt import *
+from container.experiment_manager import Experiment_Manager
+from vtc_f24_experiment_runners import main
 parser = argparse.ArgumentParser()
 
 #-config for config file path
@@ -33,6 +36,7 @@ def main():
     config_file = args.config_file
     experiment_mode = args.experiment_mode
     schedulers = args.schedulers.split(",")
+    script_dir = os.path.dirname(os.path.abspath(__file__))
 
     print(f"config file path: {config_file , type(config_file)}")
     print(f"experiment mode: {experiment_mode, type(experiment_mode)}")
@@ -50,12 +54,30 @@ def main():
     
     print("configuration is ready, starting experiment setup")
     # configuration is valid, ready to start experiment
-        # create experiment manager
+    
+    exp_manager = Experiment_Manager()
+
+    exp_manager.experiment_setup()
+    
+    for mode in experiment_mode:
+        exp_manager.results_file_paths[mode] = script_dir + "/" + exp_manager.results_folder_path + mode
+    
+    # queue the experiment modes inputted from flags
+    if experiment_mode == "lifespan":
+        exp_manager.queueLifespanExperiment()
+        
+    if experiment_mode == "energy":
+        exp_manager.queueEnergyExperiment()
+        
+    exp_manager.saveSchedulers(scheds=schedulers)
+
+
     
 
 
 if __name__ == "__main__":
     main()
+    main.main()
 
 
         
