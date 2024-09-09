@@ -6,7 +6,7 @@ from container.subscriber import Subscriber_Container
 import random
 import sys
 import csv
-from schedulers.mqtt_cc import MQTTCC
+from schedulers.mqtt_ees import MQTTEES
 from schedulers.random_algo import Random
 from schedulers.mqtt_algo import Standard
 #------------------------------------------#
@@ -161,7 +161,7 @@ def main():
     #rr = RR()
     #max_battery = MB()
     #min_task = MT()
-    cc = MQTTCC()
+    cc = MQTTEES()
     rand = Random()
     mqtt = Standard()
     global system_capability
@@ -242,7 +242,7 @@ def main():
         # pub_c._devices.clearAllDeviceEnergyConsumption()
 # ====================
         # run mqtt-cc
-        timeEnd = cc.mqttcc_algo()
+        timeEnd = cc.mqttees_algo()
         if timeEnd is None:
             timeEnd = "None"
         totalConsumption = getConsumption()

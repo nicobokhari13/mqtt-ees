@@ -12,7 +12,7 @@ pub_c = Publisher_Container()
 sub_c = Subscriber_Container()
 topic_c = Topic_Container()
 
-class MQTTCC:
+class MQTTEES:
     _instance = None
 
     def __new__(cls, *args, **kwargs):
@@ -24,20 +24,13 @@ class MQTTCC:
         self._algo_name = "cc"
         self._total_energy_consumption = 0
     
-    def resetEnergyConsumption(self):
-        self._total_energy_consumption = 0
-        pass
-    
-    def saveDevicesTotalEnergyConsumed(self, cc_energy_consumption):
-        self._total_energy_consumption+= cc_energy_consumption
-    
     # system capability used to track which publishers can publish to
     def copyOfSystemCapability(self, capability:dict):
         self._system_capability = deepcopy(capability)
 
     # timeline used to calculate total energy consumption
-    def copyOfTopicTimeStamps(self):
-        self._experiment_timeline = deepcopy(topic_c._all_sense_timestamps)
+    def copyOfTopicTimeStamps(self, timestamps):
+        self._experiment_timeline = deepcopy(timestamps)
         
     def resetTotalConsumption(self):
         self._total_energy_consumption = 0
@@ -65,7 +58,7 @@ class MQTTCC:
         
         return [tmin, fmin]
 
-    def mqttcc_algo(self):
+    def mqttees_algo(self):
         config = ConfigUtils._instance
         # add "end algorithm" boolean 
         endAlgo = False

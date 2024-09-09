@@ -6,8 +6,9 @@ from container.topic import Topic_Container
 # schedulers
 from schedulers.mqtt_algo import Standard
 from schedulers.random_algo import Random
-from schedulers.mqtt_cc import MQTTCC
+from schedulers.mqtt_ees import MQTTEES
 import random
+import csv
 from copy import deepcopy
 from datetime import datetime
 
@@ -16,6 +17,8 @@ from datetime import datetime
 # if energy is the mode and vary are false, use default tail
 
 class Experiment_Manager:
+    _instance = None
+    
     def __new__(cls, *args, **kwargs):
         if cls._instance is None:
             cls._instance = super().__new__(cls, *args, **kwargs)
@@ -26,13 +29,17 @@ class Experiment_Manager:
         self.pub_c = Publisher_Container()
         self.sub_c = Subscriber_Container()
         self.topic_c = Topic_Container()
-        self.results_folder_path = "results_" + str(datetime.now().replace(microsecond=0)) + "_"
+        date_now = datetime.now().replace(microsecond=0)
+        date_string = str(date_now)
+        date_string = date_string.replace(":","-")
+        date_string = date_string.replace(" ", "_")
+        self.results_folder_path = "results_" + date_string
 
         self.run_energy_exp = False
         self.run_lifespan_exp = False
 
         self.schedulers = None
-        self.results_file_paths = {}
+        self.results_csv_file_paths = {}
         # experiment results defined by 
             # experiment mode
             # variable used
@@ -146,34 +153,100 @@ class Experiment_Manager:
 
 # CSV Format for all files 
     # algo_name, num_round, num_topic, num_pubs, num_subs, total_energy_consumption
-    def saveResults(file_path_name, algo_name:str, num_round, num_topic, num_pubs, num_subs, total_energy_consumption, time_end):
-        if configuration._vary_pubs:
-            file_path = file_paths["pub_path"] + filename + "pub"
-        elif configuration._vary_subs:
-            file_path = file_paths["sub_path"] + filename + "sub"
-        elif configuration._vary_topics:
-            file_path = file_paths["topic_path"] + filename + "topic"
-        else:
-            file_path = "results_lasting_time/" + filename + "obperiod_" + str(configuration.OBSERVATION_PERIOD_MILISEC) 
+    def saveResults(self, algo_name, num_round, num_topic, num_pubs, num_subs, total_energy_consumption, time_end):
+        if self.run_energy_exp:
+            experiment_mode = "energy"
+        elif self.run_lifespan_exp:
+            experiment_mode = "lifespan"
+
+        if self.config._vary_pubs:
+            file_path = self.results_csv_file_paths[experiment_mode] + "_pubs"
+        elif self.config._vary_subs:
+            file_path = self.results_csv_file_paths[experiment_mode] + "_subs"
+        elif self.config._vary_topics:
+            file_path = self.results_csv_file_paths[experiment_mode] + "_topics"
+        else: 
+            if experiment_mode == "energy":
+                file_path = self.results_csv_file_paths[experiment_mode] + "_tailwindow"
+            elif experiment_mode == "lifespan":
+                file_path = self.results_csv_file_paths[experiment_mode] + "_defaults"
             #file_path = file_paths["threshold_path"] + filename + "thresh_" + str(configuration._THRESHOLD_WINDOW) 
         file_path = file_path + ".csv"
         data = [algo_name, time_end, num_round, num_topic, num_pubs, num_subs, total_energy_consumption]
-        for device in pub_c._publishers._devices.keys():
-            data.append(pub_c._publishers._devices[device]._consumption)
+        for device in self.pub_c._publishers._devices.keys():
+            data.append(self.pub_c._publishers._devices[device]._consumption)
         with open(file_path, 'a', newline='') as file:
             writer = csv.writer(file)
             writer.writerow(data)
 
-    def run_ees(self, timestamps, sys_capability):
-        cc = MQTT
         
 
-        pass
-
-    def run_random(self, timestamps, sys_capability):
-        pass
-
-    def run_mqtt(self, timestamps, sys_capability):
-        pass
-
+    def getEnergyConsumption(self):
+        totalConsumption = 0
+        for deviceMac in self.pub_c._publishers._devices.keys():
+            totalConsumption += self.pub_c._publishers._devices[deviceMac]._consumption
+        return totalConsumption
     
+    def collectResults(self, shutdown_timestamp, algo, round_num):
+        totalConsumption = self.getEnergyConsumption()
+        self.saveResults(algo_name=algo, 
+                         time_end=shutdown_timestamp,
+                         num_round=round_num, 
+                         num_topic=self.topic_c._total_topics, 
+                         num_pubs=self.pub_c._total_devices, 
+                         num_subs=self.sub_c._total_subs,
+                         total_energy_consumption=totalConsumption
+                        )
+
+    def create_ees(self, timestamps, sys_capability):
+        ees_schedule = MQTTEES()
+        ees_schedule.copyOfTopicTimeStamps(timestamps)
+        ees_schedule.copyOfSystemCapability(sys_capability)
+
+    def create_random(self, timestamps, sys_capability):
+        random_schedule = Random()
+        random_schedule.copyOfTopicTimeStamps(timestamps)
+        random_schedule.copyOfSystemCapability(sys_capability)
+
+    def create_mqtt(self, timestamps, sys_capability):
+        mqtt_schedule = Standard()
+        mqtt_schedule.copyOfTopicTimeStamps(timestamps)
+        mqtt_schedule.copyOfSystemCapability(sys_capability)
+
+    def run_ees(self, round_num):
+        ees_schedule = MQTTEES()
+        shutdown_timestamp = ees_schedule.mqttees_algo()
+        if shutdown_timestamp is None:
+            shutdown_timestamp = "NA"
+        self.collectResults(shutdown_timestamp=shutdown_timestamp, algo="ees", round_num=round_num)
+
+    def run_random(self, round_num):
+        random_schedule = Random()
+        shutdown_timestamp = random_schedule.random_algo()
+        if shutdown_timestamp is None:
+            shutdown_timestamp = "NA"
+        self.collectResults(shutdown_timestamp=shutdown_timestamp, algo="random", round_num=round_num)
+        
+
+    def run_mqtt(self, round_num):
+        mqtt_schedule = Standard()
+        shutdown_timestamp  = mqtt_schedule.mqtt_algo()
+        if shutdown_timestamp is None:
+            shutdown_timestamp = "NA"
+        self.collectResults(shutdown_timestamp=shutdown_timestamp, algo="mqtt", round_num=round_num)
+
+        
+
+            
+            
+            
+
+
+        
+    def run_random(self):
+        random_schedule = Random()
+    
+    def run_mqtt(self):
+        mqtt_schedule = Standard()
+        
+

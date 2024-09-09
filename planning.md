@@ -3,9 +3,7 @@
 ## 9-8-24 Finish everything
 
 - try top-down approach with
-
-
-
+- check tailwindow use in publisher.py
 
 ## 9-1-24 Finished Config Monitor and Template Config
 

@@ -3,7 +3,7 @@ from container.topic import Topic_Container
 from container.subscriber import Subscriber_Container
 from copy import deepcopy
 import random 
-from config_utils import ConfigUtils
+from config.config_utils import ConfigUtils
 
 
 # to access the singleton instance easily
@@ -20,24 +20,18 @@ class Standard:
         return cls._instance
     
     def __init__(self):
-        self._algo_name = "mqtt_algo"
         self._total_energy_consumption = 0
-        pass
 
     def copyOfSystemCapability(self, capability):
-        # a dictionary with each topic's capable devices for publishing to t
+        # a dictionary where 
+        #   key = topic
+        #   value = [deviceMacs of devices that can publish to the key topic] 
         self._system_capability = deepcopy(capability)
 
-    def copyOfTopicTimeStamps(self):
+    def copyOfTopicTimeStamps(self, timestamps):
         # a dictionary with each topic's sense execution timestamp < T observation period
             # topic/1: [10,20,30...]
-        self._experiment_timeline = deepcopy(topic_c._all_sense_timestamps)
-
-    def saveDevicesTotalEnergyConsumed(self, random_energy_consumption):
-        self._total_energy_consumption+= random_energy_consumption
-
-    def resetTotalConsumption(self):
-        self._total_energy_consumption = 0
+        self._experiment_timeline = deepcopy(timestamps)
         
     def findNextTask(self):
         fmin = -1

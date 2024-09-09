@@ -23,7 +23,7 @@ class Subscriber_Container:
         print(f"creating {self._total_subs} subscribers")
         for sub in range(self._total_subs):
             num_subscriptions = random.randint(a=1, b=topic_c._total_topics)
-            subscriptions = random.sample(population=topic_c._topic_dict.keys(), k=num_subscriptions)
+            subscriptions = random.sample(population=sorted(topic_c._topic_dict.keys()), k=num_subscriptions)
             for subscription in subscriptions:
                 sub_lat_qos = random.randint(a=config_file.FREQ_MS_MIN, b=config_file.FREQ_MS_MAX)
                 topic_c.updateFrequency(topic_changed=subscription, sub_lat=sub_lat_qos)

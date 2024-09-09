@@ -138,7 +138,7 @@ class Publisher_Container:
         for unit in self._publishers._devices.values():
             num_capable_publishes = random.randint(a=2, b=topic_c._total_topics)
             # randomly sample this number of topics with their max_allowed_latency
-            publishes = random.sample(population=topic_c._topic_dict.keys(), k=num_capable_publishes)
+            publishes = random.sample(population=sorted(topic_c._topic_dict.keys()), k=num_capable_publishes)
             unit.setCapableTopics(capability=publishes)
         for topic in topic_c._topic_dict.keys():
             for unit in self._publishers._devices.values():

@@ -1,8 +1,8 @@
 import argparse
 import os
-from config.config_mgmt import *
+from config import *
 from container.experiment_manager import Experiment_Manager
-from vtc_f24_experiment_runners import main
+from vtc_f24_experiment_runners import main_runner
 parser = argparse.ArgumentParser()
 
 #-config for config file path
@@ -45,10 +45,10 @@ def main():
     if experiment_mode == 'energy' and "mqtt" in schedulers: 
         print("cannot schedule mqtt base protocol with energy consumption simulation. Use ees and/or random scheduling")
         exit()
-
-    instantiateConfig(configuration_file=config_file)
+    config = ConfigUtils()
+    config.instantiateConfig(configuration_file=config_file)
     config_status = verifyConfig()
-    if config_status == CONFIG_INVALID or config_status is None: 
+    if config_status == ConfigMonitor.CONFIG_INVALID or config_status is None: 
         print("configuration is invalid or the Configuration File was not created")
         exit()
     
@@ -56,28 +56,23 @@ def main():
     # configuration is valid, ready to start experiment
     
     exp_manager = Experiment_Manager()
-
-    exp_manager.experiment_setup()
-    
-    for mode in experiment_mode:
-        exp_manager.results_file_paths[mode] = script_dir + "/" + exp_manager.results_folder_path + mode
-    
-    # queue the experiment modes inputted from flags
+        # queue the experiment modes inputted from flags
     if experiment_mode == "lifespan":
         exp_manager.queueLifespanExperiment()
         
     if experiment_mode == "energy":
         exp_manager.queueEnergyExperiment()
-        
+            
     exp_manager.saveSchedulers(scheds=schedulers)
-
-
-    
+        
+    exp_manager.results_csv_file_paths[experiment_mode] = script_dir + "/" + exp_manager.results_folder_path + "/" + experiment_mode + "_metrics"
 
 
 if __name__ == "__main__":
     main()
-    main.main()
+    main_runner.run_experiment()
+    
+    
 
 
         

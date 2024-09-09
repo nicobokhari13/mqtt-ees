@@ -54,10 +54,10 @@ class ConfigUtils:
         self.FREQ_MS_MAX = freq_ms_range[1]
 
         # DEFAULTS
-        self.DEFAULT_PUBLISHER = int(self._config.get("DEFAULTS", "def_val_pubs"))
-        self.DEFAULT_SUBSCRIBER = int(self._config.get("DEFAULTS", "def_val_subs"))
-        self.DEFAULT_TOPIC = int(self._config.get("DEFAULTS", "def_val_topics")) 
-        self.DEFAULT_TAIL_WINDOW_MS = int(self._config.get("DEFAULTS", "def_val_tail_window_ms"))
+        self.DEFAULT_PUBLISHER = int(self._config.get("DEFAULTS", "default_val_pubs"))
+        self.DEFAULT_SUBSCRIBER = int(self._config.get("DEFAULTS", "default_val_subs"))
+        self.DEFAULT_TOPIC = int(self._config.get("DEFAULTS", "default_val_topics")) 
+        self.DEFAULT_TAIL_WINDOW_MS = int(self._config.get("DEFAULTS", "default_val_tail_window_ms"))
         self.DEFAULT_OB_PERIOD_MS = int(self._config.get("DEFAULTS", "default_val_ob_period_ms"))
 
         # CONSTANTS 
@@ -73,3 +73,7 @@ class ConfigUtils:
 #
 # POSTCONDITION:
 #
+    def instantiateConfig(self, configuration_file : str):
+    
+        self.saveFilePath(configuration_file)
+        self.setConstants()
