@@ -13,7 +13,7 @@ config_help_string =    """
 
 experiment_mode_help_string =    """
                             The experiment modes supported track different metrics, and result in different results files.
-                            The following are the only options
+                            The following are the only options:
                             lifespan, energy
                             """
 
