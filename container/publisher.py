@@ -78,7 +78,7 @@ class Device:
         self._consumption += energy_increase
 
     def effectiveExecutions(self, new_task_timestamp = None):
-        tail_window = Network._instance.CONCURRENCY_TAILWINDOW_MILISEC
+        tail_window = config_file.DEFAULT_TAIL_WINDOW_MS
         time_stamps = list(self._sense_timestamp)
         if new_task_timestamp:
             time_stamps.append(new_task_timestamp)
@@ -98,7 +98,7 @@ class Device:
         changeInExecutions = newExecutions - self._num_executions_per_hour
         # the change in the number of sensing events = 1
         # change in the number of communication events is the change in effective executions
-        energyUsed = Network._instance.SENSING_ENERGY + changeInExecutions * Network._instance.COMMUNICATION_ENERGY
+        energyUsed = config_file.SENSE_ENERGY + changeInExecutions * config_file.COMM_ENERGY
         return energyUsed
 
 class Publisher_Container:

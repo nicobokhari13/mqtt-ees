@@ -7,7 +7,9 @@ exp_manager = Experiment_Manager()
 
 def scheduler_cleanup():
     exp_manager.pub_c._publishers.resetUnits()
+    print("finish reset of device timelines")
     exp_manager.pub_c._publishers.clearAllDeviceEnergyConsumption()
+    print("finish energy reset")
 
 def round_cleanup():
     exp_manager.pub_c._publishers.clearUnits()
@@ -18,14 +20,17 @@ def generateExperiment():
     exp_manager.experiment_setup()
     capability = exp_manager.createSystemCapability()
     ees_ob_period = random_ob_period = mqtt_ob_period = None
+
     if exp_manager.run_energy_exp:
         ees_ob_period = random_ob_period = mqtt_ob_period = exp_manager.config.DEFAULT_OB_PERIOD_MS
-
+        
     elif exp_manager.run_lifespan_exp:
         ees_ob_period = exp_manager.config.EES_LIFESPAN_CONST
         random_ob_period = exp_manager.config.RANDOM_LIFESPAN_CONST
         mqtt_ob_period = exp_manager.config.MQTT_LIFESPAN_CONST
         # combine main_ees, main_mqtt, and main_random
+
+    
     if "ees" in exp_manager.schedulers:
         exp_manager.create_ees(timestamps = exp_manager.topic_c.setupSenseTimestamps(    
                                     observation_period=ees_ob_period),

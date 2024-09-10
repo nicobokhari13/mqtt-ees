@@ -46,7 +46,7 @@ def main():
         print("cannot schedule mqtt base protocol with energy consumption simulation. Use ees and/or random scheduling")
         exit()
     config = ConfigUtils()
-    config.instantiateConfig(configuration_file=config_file)
+    config.instantiateConfig(config_file)
     config_status = verifyConfig()
     if config_status == ConfigMonitor.CONFIG_INVALID or config_status is None: 
         print("configuration is invalid or the Configuration File was not created")
@@ -63,9 +63,9 @@ def main():
     if experiment_mode == "energy":
         exp_manager.queueEnergyExperiment()
             
-    exp_manager.saveSchedulers(scheds=schedulers)
+    exp_manager.saveSchedulers(schedulers)
         
-    exp_manager.results_csv_file_paths[experiment_mode] = script_dir + "/" + exp_manager.results_folder_path + "/" + experiment_mode + "_metrics"
+    exp_manager.setResultsDirectoryPaths(script_dir, experiment_mode)
 
 
 if __name__ == "__main__":

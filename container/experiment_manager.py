@@ -1,6 +1,6 @@
 from config.config_utils import ConfigUtils
 # variable containers
-from container.publisher import Publisher_Container
+from container.publisher import Publisher_Container, Network
 from container.subscriber import Subscriber_Container
 from container.topic import Topic_Container
 # schedulers
@@ -9,7 +9,7 @@ from schedulers.random_algo import Random
 from schedulers.mqtt_ees import MQTTEES
 import random
 import csv
-from copy import deepcopy
+import os
 from datetime import datetime
 
 # if lifespan is the mode, use default tail 
@@ -18,7 +18,7 @@ from datetime import datetime
 
 class Experiment_Manager:
     _instance = None
-    
+
     def __new__(cls, *args, **kwargs):
         if cls._instance is None:
             cls._instance = super().__new__(cls, *args, **kwargs)
@@ -44,6 +44,8 @@ class Experiment_Manager:
             # experiment mode
             # variable used
             # datetime experiment started
+    def setResultsDirectoryPaths(self, script_dir, experiment_mode):
+        self.results_csv_file_paths[experiment_mode] = script_dir + "/" + self.results_folder_path + "/" + experiment_mode + "_metrics"
 
     def saveSchedulers(self, scheds) :
         self.schedulers = scheds
@@ -128,6 +130,7 @@ class Experiment_Manager:
         else:
             print("using defaults")
             self.setup_default()
+            
         # if the experiment mode is lifespan, 
             # the timestamps are different for each scheduler
             # for algorithm in schedulers
@@ -175,6 +178,9 @@ class Experiment_Manager:
         data = [algo_name, time_end, num_round, num_topic, num_pubs, num_subs, total_energy_consumption]
         for device in self.pub_c._publishers._devices.keys():
             data.append(self.pub_c._publishers._devices[device]._consumption)
+
+        os.makedirs(self.results_folder_path, exist_ok=True)  # Creates directory if it doesn't exist
+
         with open(file_path, 'a', newline='') as file:
             writer = csv.writer(file)
             writer.writerow(data)
@@ -197,6 +203,8 @@ class Experiment_Manager:
                          num_subs=self.sub_c._total_subs,
                          total_energy_consumption=totalConsumption
                         )
+
+
 
     def create_ees(self, timestamps, sys_capability):
         ees_schedule = MQTTEES()
@@ -235,18 +243,5 @@ class Experiment_Manager:
             shutdown_timestamp = "NA"
         self.collectResults(shutdown_timestamp=shutdown_timestamp, algo="mqtt", round_num=round_num)
 
-        
-
-            
-            
-            
-
-
-        
-    def run_random(self):
-        random_schedule = Random()
-    
-    def run_mqtt(self):
-        mqtt_schedule = Standard()
         
 

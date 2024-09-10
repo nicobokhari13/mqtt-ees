@@ -50,7 +50,7 @@ class Standard:
             self._experiment_timeline[tmin].pop(0)
 
         if not self._experiment_timeline[tmin]:
-            print("topic list", tmin, self._experiment_timeline[tmin])
+            print(tmin, self._experiment_timeline[tmin])
             # if the list at this key is empty, remove the key
             del self._experiment_timeline[tmin]
         
