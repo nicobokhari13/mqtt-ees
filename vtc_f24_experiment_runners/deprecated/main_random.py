@@ -10,7 +10,7 @@ from container.topic import Topic_Container
 from container.subscriber import Subscriber_Container
 
 # Schedulers
-from schedulers.mqtt_cc import MQTTCC
+from schedulers.mqtt_ees import MQTTEES
 from schedulers.random_algo import Random
 from schedulers.mqtt_algo import Standard
 
@@ -178,7 +178,7 @@ def main():
     #rr = RR()
     #max_battery = MB()
     #min_task = MT()
-    cc = MQTTCC()
+    cc = MQTTEES()
     rand = Random()
     mqtt = Standard()
     global system_capability

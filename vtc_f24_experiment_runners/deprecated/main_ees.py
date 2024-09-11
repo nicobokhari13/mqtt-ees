@@ -1,4 +1,4 @@
-from config_utils import ConfigUtils
+from config.config_utils import ConfigUtils
 from datetime import datetime
 from container.publisher import Publisher_Container
 from container.topic import Topic_Container
@@ -6,28 +6,22 @@ from container.subscriber import Subscriber_Container
 import random
 import sys
 import csv
-from schedulers.mqtt_cc import MQTTCC
-#from round_robin import RR
-# from max_batt import MB
-# from min_task import MT
+from schedulers.mqtt_ees import MQTTEES
 from schedulers.random_algo import Random
 from schedulers.mqtt_algo import Standard
-
 #------------------------------------------#
+
 
 config_file = sys.argv[1]
 last_msg = sys.argv[2]
-
 # EXPERIMENT SET UP
 configuration = ConfigUtils()
 configuration.setConstants(configFilePath=config_file)
-
-
 file_paths = {
     "pub_path": "results_pubs/",
     "sub_path": "results_subs/",
     "topic_path": "results_topics/",
-    "threshold_path": "results_thresh/"
+    "tailwindow_path": "results_tailwindow/"
 }
 filename = "results_" + str(datetime.now()) + "_"
 
@@ -56,7 +50,7 @@ system_capability = {}
 #------------------------------------------#
 
 
-# Precondition: all the topic strings are created
+# Precondition: all the topic strings are created, and the devices generated their capability
 def createSystemCapability():
     capability = {topic: [-1, []] for topic in topic_c._topic_dict.keys()}
     for topic in topic_c._topic_dict.keys(): # for every topic
@@ -164,8 +158,10 @@ def getConsumption():
 
 def main():
     # create algo objects
-
-    cc = MQTTCC()
+    #rr = RR()
+    #max_battery = MB()
+    #min_task = MT()
+    cc = MQTTEES()
     rand = Random()
     mqtt = Standard()
     global system_capability
@@ -174,7 +170,10 @@ def main():
         # set up experiment
         experiment_setup()
         # set system capability and timestamps for algorithms
-
+        #max_battery.copyOfSystemCapability(system_capability)
+        #max_battery.copyOfTopicTimeStamps()
+        #min_task.copyOfSystemCapability(system_capability)
+        #min_task.copyOfTopicTimeStamps()
         rand.copyOfSystemCapability(system_capability)
         rand.copyOfTopicTimeStamps()    
         cc.copyOfSystemCapability(system_capability)
@@ -183,28 +182,67 @@ def main():
         mqtt.copyOfTopicTimeStamps()
 
 # SIMULATE ALGORITHMS
-# ==================== Random ====================
-        timeEnd = rand.random_algo()
-        if timeEnd is None:
-            timeEnd = "None"
-        # # # save the total energy consumption
-        # # #pub_c._devices.calculateTotalEnergyConsumption()
-        # # #random_energy_consumption = pub_c._devices._all_devices_energy_consumption
-        # # #random.saveDevicesTotalEnergyConsumed(round_energy_consumption=rr_energy_consumption)
-        totalConsumption = getConsumption()
-        saveResults(algo_name=rand._algo_name, time_end=timeEnd, num_round=round, num_topic=topic_c._total_topics, num_pubs=pub_c._total_devices, num_subs=sub_c._total_subs, total_energy_consumption=totalConsumption)
+# ====================
+        # # run Min Task
+        # min_task.min_task_algo()
+        # # save the total energy consumption
+        # pub_c._devices.calculateTotalEnergyConsumption()
+        # mt_energy_consumption = pub_c._devices._all_devices_energy_consumption
+        # #random.saveDevicesTotalEnergyConsumed(round_energy_consumption=rr_energy_consumption)
+        # saveResults(algo_name=min_task._algo_name, num_round=round, num_topic=topic_c._total_topics, num_pubs=pub_c._total_devices, num_subs=sub_c._total_subs, total_energy_consumption=mt_energy_consumption)
+        # # reset experiment for next algorithm
+        # pub_c._devices.resetUnits()
+        # pub_c._devices.clearAllDeviceEnergyConsumption()
+
+# ====================
+
+        # # run Max Battery 
+        # max_battery.max_batt_algo()
+        # # save the total energy consumption
+        # pub_c._devices.calculateTotalEnergyConsumption()
+        # mb_energy_consumption = pub_c._devices._all_devices_energy_consumption
+        # #random.saveDevicesTotalEnergyConsumed(round_energy_consumption=rr_energy_consumption)
+        # saveResults(algo_name=max_battery._algo_name, num_round=round, num_topic=topic_c._total_topics, num_pubs=pub_c._total_devices, num_subs=sub_c._total_subs, total_energy_consumption=mb_energy_consumption)
+        # # reset experiment for next algorithm
+        # pub_c._devices.resetUnits()
+        # pub_c._devices.clearAllDeviceEnergyConsumption()
+
+# ====================
+        # # run RR 
+        # rr.rr_algo()
+        # # save the total energy consumption
+        # pub_c._devices.calculateTotalEnergyConsumption()
+        # rr_energy_consumption = pub_c._devices._all_devices_energy_consumption
+        # #rr.saveDevicesTotalEnergyConsumed(round_energy_consumption=rr_energy_consumption)
+        # saveResults(algo_name=rr._algo_name, num_round=round, num_topic=topic_c._total_topics, num_pubs=pub_c._total_devices, num_subs=sub_c._total_subs, total_energy_consumption=rr_energy_consumption)
+        # # reset experiment for next algorithm
+        # pub_c._devices.resetUnits()
+        # pub_c._devices.clearAllDeviceEnergyConsumption()
+# ====================
+        # run random
+        # timeEnd = rand.random_algo()
+        # if timeEnd is None:
+        #     timeEnd = "None"
+        # # # # save the total energy consumption
+        # # # #pub_c._devices.calculateTotalEnergyConsumption()
+        # # # #random_energy_consumption = pub_c._devices._all_devices_energy_consumption
+        # # # #random.saveDevicesTotalEnergyConsumed(round_energy_consumption=rr_energy_consumption)
+        # totalConsumption = getConsumption()
+        # saveResults(algo_name=rand._algo_name, time_end=timeEnd, num_round=round, num_topic=topic_c._total_topics, num_pubs=pub_c._total_devices, num_subs=sub_c._total_subs, total_energy_consumption=totalConsumption)
         
-        # # # reset experiment for next algorithm
-        pub_c._publishers.resetUnits()
-        pub_c._publishers.clearAllDeviceEnergyConsumption()
-# ==================== MQTT ==================== 
-        mqtt.mqtt_algo()
-        totalConsumption = getConsumption()
-        saveResults(algo_name=mqtt._algo_name, num_round=round, num_topic=topic_c._total_topics, num_pubs=pub_c._total_devices, num_subs=sub_c._total_subs, total_energy_consumption=totalConsumption)
-        pub_c._publishers.resetUnits()
-        pub_c._publishers.clearAllDeviceEnergyConsumption()
-# ==================== MQTT-EES ====================
-        timeEnd = cc.mqttcc_algo()
+        # # # # reset experiment for next algorithm
+        # pub_c._devices.resetUnits()
+        # pub_c._devices.clearAllDeviceEnergyConsumption()
+# ====================
+        # run mqtt 
+        # mqtt.mqtt_algo()
+        # totalConsumption = getConsumption()
+        # saveResults(algo_name=mqtt._algo_name, num_round=round, num_topic=topic_c._total_topics, num_pubs=pub_c._total_devices, num_subs=sub_c._total_subs, total_energy_consumption=totalConsumption)
+        # pub_c._devices.resetUnits()
+        # pub_c._devices.clearAllDeviceEnergyConsumption()
+# ====================
+        # run mqtt-cc
+        timeEnd = cc.mqttees_algo()
         if timeEnd is None:
             timeEnd = "None"
         totalConsumption = getConsumption()
@@ -219,25 +257,24 @@ def main():
         # pub_c._devices.resetUnits()
         # pub_c._devices.clearAllDeviceEnergyConsumption()
 
-# ==================== END OF SIMULATED ROUND ====================
-        # end of round clean up
+# after running the algorithms, clear everything before next round
         pub_c._publishers.clearUnits()
         pub_c._publishers.clearAllDeviceEnergyConsumption()
         topic_c.clearTopicDict()
-        
-        
-# ==================== END OF SIMULATION====================
-
     print(last_msg)
-    
-# acquire stats
-
     # after all the rounds, calculate the average system energy consumption per round
     # rr_avg_energy_consumption = rr._total_energy_consumption / configuration._sim_rounds
     # cc_avg_energy_consumption = cc._total_energy_consumption / configuration._sim_rounds
     # saveResults(algo_name=rr._algo_name, avg_energy_consumption=rr_avg_energy_consumption)
     # saveResults(algo_name=cc._algo_name, avg_energy_consumption=cc_avg_energy_consumption)
 
+    # for loop num rounds
+        # set up experiment 
+        # run cc
+        # reset anything in between algos
+        # run rr
+        # reset anyhting in between algos
+    # run saveResults with algo + total_consumption / num_rounds
 
 if __name__ == "__main__":
     main()
