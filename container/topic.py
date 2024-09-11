@@ -47,7 +47,7 @@ class Topic_Container:
     # Postcondition: all_sense_timestamps is a dictionary where 
         # key: topic from topic_dict
         # value: list of frequency timestamps from 0 - T observation period 
-        # this object will be the same across all algorithms, need deepcopy for each
+        # this object is copied by all schedulers, need deepcopy for each
         # only created once per round
     def setupSenseTimestamps(self, observation_period):
         all_sense_timestamps = {}

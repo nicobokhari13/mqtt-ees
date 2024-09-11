@@ -28,9 +28,9 @@ def generateExperiment():
         ees_ob_period = exp_manager.config.EES_LIFESPAN_CONST
         random_ob_period = exp_manager.config.RANDOM_LIFESPAN_CONST
         mqtt_ob_period = exp_manager.config.MQTT_LIFESPAN_CONST
-        # combine main_ees, main_mqtt, and main_random
 
-    
+    # in the future, you may need to create an abstract class
+    # to generalize the schedulers code (ie abstract setup and teardown functions)
     if "ees" in exp_manager.schedulers:
         exp_manager.create_ees(timestamps = exp_manager.topic_c.setupSenseTimestamps(    
                                     observation_period=ees_ob_period),

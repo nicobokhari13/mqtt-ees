@@ -63,11 +63,11 @@ class Experiment_Manager:
 
     # Precondition: all the topic strings are created
     def createSystemCapability(self):
-        capability = {topic: [-1, []] for topic in self.topic_c._topic_dict.keys()}
+        capability = {topic: [] for topic in self.topic_c._topic_dict.keys()}
         for topic in self.topic_c._topic_dict.keys(): # for every topic
             for device in self.pub_c._publishers._devices.values(): # find the device
                 if device.capableOfPublishing(topic):
-                    capability[topic][1].append(device._device_mac)
+                    capability[topic].append(device._device_mac)
         return capability
         # different for every round
 
@@ -80,7 +80,6 @@ class Experiment_Manager:
         self.sub_c.setTotalSubs(num_subs=self.config.DEFAULT_SUBSCRIBER)
 
         self.container_setup()
-
 
     #------------------------------------------#
 
@@ -117,7 +116,7 @@ class Experiment_Manager:
 
     # performed once before the rounds start
     def experiment_setup(self):
-        # based on the    config settings, begin setup functions for the containers
+        # based on the config settings, begin setup functions for the containers
         if self.config._vary_pubs:
             print("varying publishers")
             self.setup_exp_vary_pub()
@@ -128,26 +127,20 @@ class Experiment_Manager:
             print("varying topics")
             self.setup_exp_vary_topic()
         else:
+            # the lifespan experiment mode and 
+            # energy mode with varied tail window use defaults 
             print("using defaults")
             self.setup_default()
-            
-        # if the experiment mode is lifespan, 
-            # the timestamps are different for each scheduler
-            # for algorithm in schedulers
-                # if algo == ees
-                    # period = config.consant.ees
-                # elif algo == mqtt
-                    # period = config.constant.mqtt
-                # elif algo == random
-                    # period = config.constant.random
-                # timestamps = topic.setupSenseTimestamps(self, period)
 
     def createSystemCapability(self):
-        capability = {topic: [-1, []] for topic in self.topic_c._topic_dict.keys()}
+        # for every key topic pubilshable on the system, 
+            # the value is a list of device mac's of devices 
+            # that are capable of publishing to the key topic
+        capability = {topic: [] for topic in self.topic_c._topic_dict.keys()}
         for topic in self.topic_c._topic_dict.keys(): # for every topic
             for device in self.pub_c._publishers._devices.values(): # find the device
                 if device.capableOfPublishing(topic):
-                    capability[topic][1].append(device._device_mac)
+                    capability[topic].append(device._device_mac)
         return capability
     
     def createTimestamps(self, observation_period):
@@ -157,6 +150,7 @@ class Experiment_Manager:
 # CSV Format for all files 
     # algo_name, num_round, num_topic, num_pubs, num_subs, total_energy_consumption
     def saveResults(self, algo_name, num_round, num_topic, num_pubs, num_subs, total_energy_consumption, time_end):
+        # filename string generation
         if self.run_energy_exp:
             experiment_mode = "energy"
         elif self.run_lifespan_exp:
@@ -175,6 +169,8 @@ class Experiment_Manager:
                 file_path = self.results_csv_file_paths[experiment_mode] + "_defaults"
             #file_path = file_paths["threshold_path"] + filename + "thresh_" + str(configuration._THRESHOLD_WINDOW) 
         file_path = file_path + ".csv"
+
+        # creating csv line for the result file
         data = [algo_name, time_end, num_round, num_topic, num_pubs, num_subs, total_energy_consumption]
         for device in self.pub_c._publishers._devices.keys():
             data.append(self.pub_c._publishers._devices[device]._consumption)

@@ -3,9 +3,14 @@ import os
 from config import *
 from container.experiment_manager import Experiment_Manager
 from vtc_f24_experiment_runners import main_runner
-parser = argparse.ArgumentParser()
 
-#-config for config file path
+# ------------------------------------------------------------------
+# [Nico Bokhari] start.py
+#          The execution script for a Python simulation measuring MQTT-EES,
+#          a task orchestration algorithm for energy efficient MQTT systems
+# ------------------------------------------------------------------
+
+# help strings for the script flags
 config_help_string =    """
                         A valid file path to a configuration inii file. 
                         See example configuration in config_example.ini
@@ -17,16 +22,19 @@ experiment_mode_help_string =    """
                             lifespan, energy
                             """
 
-#-sched for schedulers
 sched_help_string =   """
                 Comma delimited list of schedulers to run in experiment. \n
                 Values include: mqttees,random,mqtt
                 """
 
+# flag parser
+parser = argparse.ArgumentParser()
 parser.add_argument("-config", "--configuration",dest ="config_file", help=config_help_string, type=str)
 parser.add_argument("-mode", "--experimentmode",dest ="experiment_mode", help=experiment_mode_help_string, type=str)
 parser.add_argument("-scheds", "--schedulers",dest ="schedulers", help=sched_help_string, type=str)
 
+# script arguments stored as strings 
+# the destination variable is the same name as the "dest" parameter in parser.add_argument
 args = parser.parse_args()
 
 
@@ -36,6 +44,7 @@ def main():
     config_file = args.config_file
     experiment_mode = args.experiment_mode
     schedulers = args.schedulers.split(",")
+    
     script_dir = os.path.dirname(os.path.abspath(__file__))
 
     print(f"config file path: {config_file , type(config_file)}")
@@ -45,6 +54,8 @@ def main():
     if experiment_mode == 'energy' and "mqtt" in schedulers: 
         print("cannot schedule mqtt base protocol with energy consumption simulation. Use ees and/or random scheduling")
         exit()
+
+    # process config file 
     config = ConfigUtils()
     config.instantiateConfig(config_file)
     config_status = verifyConfig()

@@ -59,8 +59,6 @@ class MQTTEES:
         return [tmin, fmin]
 
     def mqttees_algo(self):
-        config = ConfigUtils._instance
-        # add "end algorithm" boolean 
         endAlgo = False
         while len(self._experiment_timeline.keys()) > 0:
             [newTask, newTaskTimeStamp] = self.findNextTask()
@@ -71,7 +69,7 @@ class MQTTEES:
             Enew = None
             Eratio = None
             bestMac = None
-            for deviceMac in self._system_capability[newTask][1]:
+            for deviceMac in self._system_capability[newTask]:
                 # for each device capable of publishing to newTask
                 # calculate energy increase from adding the new task
                 Einc = pub_c._publishers._devices[deviceMac].energyIncrease(newTaskTimeStamp)

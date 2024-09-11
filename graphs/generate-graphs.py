@@ -14,7 +14,7 @@ random_line_color = 'r'
 mqtt_line_color = 'b'
 
 
-raw_data_file = "/home/owner/repos/research/data/mqttees-graph-data.xlsx"
+raw_data_file = "data/mqttees-graph-data.xlsx"
 pub_sheet = "pub-line-graph"
 sub_sheet = "sub-line-graph"
 topic_sheet = "topic-line-graph"
