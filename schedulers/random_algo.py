@@ -85,7 +85,7 @@ class Random:
             [newTask, newTaskTimeStamp] = self.findNextTask()
             
             # get a random device that is capable of performing the sensing task
-            random_index = random.randrange(start=0, stop=len(self._system_capability[newTask][1]))
+            random_index = random.randrange(start=0, stop=len(self._system_capability[newTask]))
             publishing_mac = self._system_capability[newTask][random_index]
             energyIncrease = pub_c._publishers._devices[publishing_mac].energyIncrease(task_timestamp=newTaskTimeStamp)
             if energyIncrease + pub_c._publishers._devices[publishing_mac]._consumption >= pub_c._publishers._devices[publishing_mac]._battery:
